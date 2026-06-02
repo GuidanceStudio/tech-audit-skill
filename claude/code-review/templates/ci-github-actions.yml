@@ -1,0 +1,128 @@
+# Starter GitHub Actions workflow — the audit gates.
+#
+# Drop this in .github/workflows/audit.yml and adjust per stack.
+# Triggers: every PR + every push to main.
+#
+# What it runs (in fast-feedback order):
+#   1. Gitleaks (secrets in git)
+#   2. Dep CVE scan (composer / npm / pip audit)
+#   3. Linters (stack-specific)
+#   4. Type checks (stack-specific)
+#   5. Trivy (container + IaC + SBOM)
+#   6. Semgrep (cross-language SAST)
+#   7. Stack-specific deep SAST (optional, slower)
+
+name: Code audit gates
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }   # full history for gitleaks
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Stack-specific lint + type check + tests ─────────────────
+  # Uncomment / adapt the matrix entries for the languages in the repo.
+
+  lint-php:
+    name: PHP — lint + types
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('composer.json') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.4' }
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer audit
+      - run: vendor/bin/phpstan analyse --error-format=github
+      - run: vendor/bin/pint --test
+      - run: vendor/bin/phpunit  # or pest
+
+  lint-python:
+    name: Python — lint + types
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('pyproject.toml') != '' || hashFiles('requirements.txt') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.13' }
+      - run: pip install ruff mypy pip-audit
+      - run: pip-audit
+      - run: ruff check --output-format=github .
+      - run: ruff format --check .
+      - run: mypy --strict app/   # adjust path
+
+  lint-typescript:
+    name: TypeScript — lint + types
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('package.json') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: 'npm' }
+      - run: npm ci
+      - run: npm audit --audit-level=high
+      - run: npx biome ci .
+      - run: npx tsc --noEmit
+      - run: npm test
+
+  # ── Cross-language SAST + container/IaC scan ─────────────────
+
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/owasp-top-ten
+            p/secrets
+
+  trivy-fs:
+    name: Trivy filesystem
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
+  hadolint:
+    name: Hadolint
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('Dockerfile') != '' || hashFiles('**/Dockerfile') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          recursive: true
+          failure-threshold: warning
+
+  # ── Optional: clone detection (LLM-assisted code signal) ──────
+
+  jscpd:
+    name: jscpd clone detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npx jscpd . --threshold 5 --reporters consoleFull

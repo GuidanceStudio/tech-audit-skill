@@ -1,0 +1,79 @@
+# Starter pre-commit hooks.
+#
+# Install: pip install pre-commit && pre-commit install
+# Drop this as .pre-commit-config.yaml in the repo root.
+#
+# Hooks run on `git commit`. Fast (<5s each) — anything slower goes in CI.
+
+repos:
+  # ── Universal ────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: detect-private-key
+
+  # ── Secrets ──────────────────────────────────────────────────
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+
+  # ── Python ───────────────────────────────────────────────────
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # ── PHP ──────────────────────────────────────────────────────
+  # Local hook — runs against the user's installed phpstan binary.
+  - repo: local
+    hooks:
+      - id: phpstan
+        name: PHPStan
+        entry: vendor/bin/phpstan analyse --error-format=table
+        language: system
+        types: [php]
+        pass_filenames: false
+        require_serial: true
+
+      - id: pint
+        name: Laravel Pint
+        entry: vendor/bin/pint --test
+        language: system
+        types: [php]
+        pass_filenames: false
+
+  # ── TypeScript / JavaScript ──────────────────────────────────
+  - repo: https://github.com/biomejs/pre-commit
+    rev: v0.6.1
+    hooks:
+      - id: biome-check
+        additional_dependencies: ["@biomejs/biome@1.9.4"]
+
+  # ── Shell ────────────────────────────────────────────────────
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+      - id: shellcheck
+
+  # ── Dockerfile ───────────────────────────────────────────────
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.13.0-beta
+    hooks:
+      - id: hadolint-docker
+
+# Notes:
+# - Comment out the language sections you don't have.
+# - First-time setup: `pre-commit install --install-hooks` (the hooks themselves
+#   are cached after first run; commits are fast).
+# - To skip on a one-off commit: `git commit --no-verify` (only for genuine
+#   emergencies — every skip is a future audit finding).
