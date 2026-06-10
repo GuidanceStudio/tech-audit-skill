@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-SKILL_NAME = next((REPO / "claude").glob("*/SKILL.md")).parent.name
+SKILL_NAME = next(p.parent.name for p in REPO.glob("*/SKILL.md"))
 
 
 def run_install(home: Path, *args: str) -> subprocess.CompletedProcess:

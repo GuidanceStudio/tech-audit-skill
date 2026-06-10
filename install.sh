@@ -54,8 +54,8 @@ while [ $# -gt 0 ]; do
 done
 
 # Detect local vs remote mode
-if [ -d "$SCRIPT_DIR/claude/code-audit" ]; then
-    SRC_ROOT="$SCRIPT_DIR/claude/code-audit"
+if [ -d "$SCRIPT_DIR/code-audit" ]; then
+    SRC_ROOT="$SCRIPT_DIR/code-audit"
 else
     if ! command -v git >/dev/null 2>&1; then
         echo "error: remote install requires 'git' on PATH" >&2
@@ -64,9 +64,9 @@ else
     CLEANUP_DIR="$(mktemp -d)"
     echo "Cloning $REPO_URL into temporary dir..."
     git clone --depth=1 "$REPO_URL" "$CLEANUP_DIR" >/dev/null 2>&1
-    SRC_ROOT="$CLEANUP_DIR/claude/code-audit"
+    SRC_ROOT="$CLEANUP_DIR/code-audit"
     if [ ! -d "$SRC_ROOT" ]; then
-        echo "error: cloned repo does not contain claude/code-audit/" >&2
+        echo "error: cloned repo does not contain code-audit/" >&2
         exit 1
     fi
 fi

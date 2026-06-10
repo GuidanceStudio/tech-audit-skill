@@ -1,4 +1,4 @@
-# DEVPLAN — code-review skill
+# DEVPLAN — code-audit skill
 
 Findings from the 2026-06-10 self-audit of the skill (content + pipeline
 review). Milestones ordered by priority. Source analysis: bugs verified
@@ -375,3 +375,193 @@ installed skill stays lean.
 Exit gate: `pytest` green locally; cross-ref linter passes on the
 current tree; `install.sh --check` detects a hand-edited installed
 file.
+
+---
+
+# v0.3 — Generic packaging + UX/UI depth
+
+Two arcs from the 2026-06-10 discussion. **Packaging:** the skill is
+nested under `claude/code-audit/` and worded for Claude; research
+confirmed `SKILL.md` is a cross-assistant standard (agentskills.io —
+Claude Code, Codex CLI, opencode all read the same folder verbatim),
+so flattening + de-Claudizing makes one payload installable everywhere,
+with a root installer that targets each assistant. **Content:** the
+framework has no dedicated UX or UI dimension (D12 is admin-surface
+source only and defers rendered review to the `ui-review` skill); add a
+UX level and a UI level, each source-level by default with an advanced
+rendered pass (Playwright, delegated to `ui-review`) so we can audit
+"the real thing".
+
+User decisions (2026-06-10): installer = **broad** (native SKILL.md for
+Claude+Codex+opencode, TOML for Gemini, generated AGENTS.md for the
+Cursor/Windsurf/Copilot/Aider/Continue tier, + manual-copy path); UX/UI
+= **hybrid** (base source-level always; advanced fires Playwright via
+`ui-review`).
+
+Recommended order: M10 → M11 → M12 (packaging first, so content lands
+on the flat generic layout) → M13 → M14.
+
+## Phase I — Generic packaging
+
+### M10: Flatten the layout ✅
+
+**Why:** A nested `claude/code-audit/` path fights manual installation
+(people want to drop one folder where they like) and signals
+"Claude-only". A top-level flat skill folder is the agentskills.io
+shape and copies anywhere.
+
+**Approach:** Move `claude/code-audit/` → top-level `code-audit/` (the
+installable payload: `SKILL.md` + `cuts/ dimensions/ threat-models/
+templates/ tools/ languages/ playbooks/ routing/ scripts/ extensions/`).
+Update everything that assumes the old path: `install.sh`
+(`SRC_ROOT`), the test SKILL-discovery globs in `tests/`, the
+crossref linter, README layout + paths. `docs/examples/` stays out of
+the payload. Tests stay green throughout.
+
+**Tasks:**
+- [x] `git mv claude/code-audit code-audit`; remove the now-empty `claude/`
+- [x] Update `install.sh` source-dir detection to the flat path
+- [x] Update `tests/*.py` skill-dir discovery to the flat path
+- [x] Update README layout tree + all `claude/code-audit/` references
+- [x] `pytest` + ruff green; `install.sh --force` then `--check` OK
+
+**Done when:** the skill payload is a single top-level `code-audit/`
+folder, the suite is green, and a bare `cp -r code-audit ~/somewhere`
+yields a self-contained skill.
+
+### M11: De-Claudize the content
+
+**Why:** The payload should read as assistant-neutral so Codex/opencode/
+Gemini users aren't told to press Claude-specific buttons. The
+`SKILL.md` frontmatter stays (it IS the shared standard), but harness-
+and tool-specific wording should generalize.
+
+**Approach:** Genericize the few Claude-isms: `cuts/full.md` fan-out
+("the harness has subagents (Agent / Workflow tools)" → "your assistant
+can run parallel subagents"); any `AskUserQuestion`/tool-name mentions →
+"ask a structured question if your assistant supports it"; reviewer
+strings "Claude code-audit skill" in templates → "code-audit skill";
+`/code-audit` invocation phrased as "invoke the skill (slash command or
+@-mention, per your assistant)". Add a short **"Using this skill"**
+section to README mapping invocation per assistant. Keep severity
+emojis, dimension IDs, method shell snippets unchanged.
+
+**Tasks:**
+- [ ] Genericize `cuts/full.md` fan-out wording (subagents, model tiering)
+- [ ] Sweep templates + SKILL.md for "Claude"/tool-name strings; neutralize
+- [ ] Phrase invocation assistant-agnostically in SKILL.md
+- [ ] README "Using this skill" per-assistant invocation note
+- [ ] crossref linter green (no broken refs introduced)
+
+**Done when:** `grep -ri 'claude\|AskUserQuestion\|Workflow tool' code-audit/`
+returns only the agentskills.io-standard frontmatter and legitimate
+upstream-project citations; the content reads tool-neutral.
+
+### M12: Root multi-assistant installer
+
+**Why:** One installer that places the payload correctly for whichever
+assistant the user runs, and prints the flat path for manual copy.
+
+**Approach:** Rewrite root `install.sh` to prompt (or take a flag) for
+the target and act per the research:
+- **Claude Code** → copy `code-audit/` verbatim to `~/.claude/skills/code-audit/`.
+- **Codex CLI** → copy verbatim to `~/.codex/skills/code-audit/` (same SKILL.md standard).
+- **opencode** → copy verbatim to `~/.config/opencode/skills/code-audit/` (verify singular `skill`/`skills` dir against installed version; fall back to documented path).
+- **Gemini CLI** → generate `~/.gemini/commands/code-audit.toml` wrapping the router (`prompt = """…"""`), since Gemini uses TOML not SKILL.md.
+- **AGENTS.md tier** (Cursor/Windsurf/Copilot/Aider/Continue) → write/append a thin `AGENTS.md` pointer section that references the installed skill location + how to invoke the audit.
+- **manual** → print the absolute path of the flat `code-audit/` folder and the one-line "copy it wherever your tool reads skills".
+Keep `--force`, `--check` (per target), remote-clone mode, and the
+`.installed-from` SHA stamp. Default with no target = interactive menu;
+`--target <name>` / `all` non-interactive.
+
+**Tasks:**
+- [ ] Target selection: interactive menu + `--target claude|codex|opencode|gemini|agents|manual|all`
+- [ ] Per-target placement (verbatim copy / TOML emitter / AGENTS.md writer / print-path)
+- [ ] Gemini TOML wrapper generation from the router
+- [ ] `--check` works per target; `.installed-from` stamp retained
+- [ ] Tests: install + `--check` for claude/codex/opencode (verbatim), gemini (toml present), agents (pointer present)
+- [ ] README install section rewritten for the multi-assistant flow
+
+**Done when:** `install.sh --target <x>` installs correctly for each of
+claude/codex/opencode/gemini/agents, `--check` detects drift per target,
+and `--target manual` prints a copy-anywhere path. Suite green.
+
+## Phase J — UX & UI depth
+
+### M13: D15 — UX & interaction design
+
+**Why:** No dimension audits user experience. D12 covers admin-surface
+source coherence only; rendered review lives in `ui-review`. A
+product-wide UX dimension is missing.
+
+**Approach:** New `dimensions/D15-ux-interaction.md`, same file shape as
+D1–D14. **Base (source-level, always, no browser):** flow completeness
+(every CTA has a destination, every error a recovery path in code),
+interaction-state coverage in components (loading/empty/error/success
+branches present), form UX (validation feedback wiring, disabled/in-
+flight states, destructive-action confirmation), information
+architecture & navigation structure, accessibility-in-markup (semantic
+elements, alt text, labels, ARIA, focus-management code), i18n
+readiness (hardcoded user-facing strings vs translation keys),
+perceived-performance patterns (skeletons, suspense). **Advanced
+(rendered, opt-in):** when the app is runnable and Node+Playwright are
+available, hand off to the `ui-review` skill (or run its
+`scripts/capture.mjs`) to screenshot real surfaces and apply its
+usability/state/responsive checks — don't reimplement capture. Without
+a runnable app, stay source-level and record the rendered pass as
+deferred. PoC/Production bars + cross-refs (D12 admin-surface, D16,
+`ui-review`). Tag in the SKILL.md registry as default-deep when a UI
+surface is detected; add a frontend sub-marker to `routing/detect-stack.md`
+(react/vue/svelte/angular deps, `.tsx/.vue/.blade.php` templates).
+
+**Tasks:**
+- [ ] Write `dimensions/D15-ux-interaction.md` (base + advanced sections)
+- [ ] Add D15 to the SKILL.md dimension registry with its tag + topics
+- [ ] Frontend sub-marker in `routing/detect-stack.md` (flags D15/D16 default-deep)
+- [ ] Wire into cuts: `quick` (touched UI → D15), `deep` topic map via registry, `full` via tags
+- [ ] Cross-reference D12 + `ui-review` with a clear who-owns-what boundary
+- [ ] crossref linter green
+
+**Done when:** D15 exists in the registry and cuts, runs source-level
+with no browser, and its advanced section delegates the rendered pass
+to `ui-review`/Playwright.
+
+### M14: D16 — UI & design-system craft
+
+**Why:** No dimension audits visual/UI craft at the source level, and
+the user wants a "Western scale-up" aesthetic bar made explicit.
+
+**Approach:** New `dimensions/D16-ui-design-system.md`. **Base
+(source-level):** design-token discipline (spacing/type/color scales vs
+hardcoded hex/px magic numbers), component reuse vs one-off styling,
+variant consistency, responsive breakpoints defined in code, theme/
+dark-mode handling, motion/transition discipline, icon-system
+consistency, typographic hierarchy in markup/CSS. Name the **reference
+bar explicitly: "Western scale-up" = Linear / Stripe / Vercel / Notion-
+class craft** — systematic spacing & type scale, restrained neutral
+palette + one accent, generous whitespace, crisp hierarchy, purposeful
+(not decorative) motion, density tuned to the user (dense for B2B power
+tools, airy for marketing). Findings cite the gap to that bar.
+**Advanced (rendered, opt-in):** same Playwright/`ui-review` hand-off as
+D15 for visual-design + responsive checks on real screenshots.
+PoC/Production bars + cross-refs. Same registry tag as D15.
+
+**Tasks:**
+- [ ] Write `dimensions/D16-ui-design-system.md` (base + advanced; Western-scale-up bar named)
+- [ ] Add D16 to the SKILL.md registry; share the frontend sub-marker with D15
+- [ ] Wire into cuts (quick/deep/full) alongside D15
+- [ ] Cross-reference D15 + D12 + `ui-review`; de-duplicate the rendered-pass hand-off (one shared note, not two)
+- [ ] crossref linter green; full suite green; `install.sh --check` OK after redeploy
+
+**Done when:** D16 exists with base + advanced passes, names the
+Western-scale-up reference bar, shares the rendered hand-off with D15,
+and the registry/report status table covers all 16 dimensions.
+
+## Out of scope for v0.3
+
+- Reimplementing screenshot capture in code-audit (the advanced pass
+  delegates to `ui-review`, single source of truth).
+- Native non-SKILL.md integrations beyond Gemini TOML + AGENTS.md
+  (Cline `.clinerules`, Continue blocks) — covered by AGENTS.md or
+  skipped until asked.
+- A `uninstall` command; auto-update; telemetry.

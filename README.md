@@ -43,7 +43,7 @@ cd code-repository-audit-skill
 bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh)
 ```
 
-The installer copies `claude/code-audit/` to `~/.claude/skills/code-audit/`. Pass `--force` to overwrite an existing installation.
+The installer copies `code-audit/` to `~/.claude/skills/code-audit/`. Pass `--force` to overwrite an existing installation.
 
 ## Use
 
@@ -129,7 +129,7 @@ D4, D5, D8 carry the ⚠️ default-deep mark because they're the high-blast-rad
 | Quarterly | `full` cut + restore-from-backup drill | Every 3 months (~5-7 h) |
 | Triggered | `deep`, `security` cuts | New integration; post-incident; pre-VC |
 
-See [`claude/code-audit/playbooks/operations.md`](claude/code-audit/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
+See [`code-audit/playbooks/operations.md`](code-audit/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
 
 ## Severity scheme
 
@@ -141,36 +141,39 @@ See [`claude/code-audit/playbooks/operations.md`](claude/code-audit/playbooks/op
 
 ## Per-project extensions
 
-Drop `.code-audit/extras/*.md` files in your repo to add project-specific dimensions, threat models, or stack files. The skill loads them after the defaults. See [`claude/code-audit/extensions/README.md`](claude/code-audit/extensions/README.md) for the schema.
+Drop `.code-audit/extras/*.md` files in your repo to add project-specific dimensions, threat models, or stack files. The skill loads them after the defaults. See [`code-audit/extensions/README.md`](code-audit/extensions/README.md) for the schema.
 
 ## Repository layout
 
 ```
 code-repository-audit-skill/
-├── install.sh                       # installer
+├── install.sh                       # multi-assistant installer
 ├── README.md                        # this file
 ├── LICENSE                          # Apache-2.0
-└── claude/
-    └── code-audit/                  # the skill that gets copied to ~/.claude/skills/
-        ├── SKILL.md                 # routing spine — Claude loads this first
-        ├── routing/detect-stack.md
-        ├── cuts/{quick,security,release,deep,full}.md
-        ├── dimensions/D*-*.md   # the 13 dimensions
-        ├── languages/{php-laravel,python-fastapi,typescript-node,shell,docker}.md
-        ├── threat-models/{multi-tenant-isolation,secret-management,
-        │                  llm-assisted-code,pii-data-flow,auth-model,
-        │                  data-loss}.md
-        ├── tools/{_matrix,gitleaks,trivy,semgrep,phpstan-larastan,
-        │         ruff,mypy,biome,hadolint,jscpd,pgtap,auto-dep-updates}.md
-        ├── templates/{full-audit-report,quick-scan-output,
-        │             security-pass-output,triage-and-summary,
-        │             finding-phrasing,ci-github-actions.yml,
-        │             ci-pre-commit.yaml}
-        ├── playbooks/{operations,false-positives}.md
-        ├── extensions/README.md
-        └── scripts/{_detect_stack,_bootstrap_tooling,
-                    _doctor_fresh_clone,_findings_to_milestones}.py
+├── docs/examples/                   # worked example reports (not shipped)
+└── code-audit/                      # the flat, assistant-neutral skill payload
+    ├── SKILL.md                     # routing spine (agentskills.io standard)
+    ├── routing/detect-stack.md
+    ├── cuts/{quick,security,release,deep,full}.md
+    ├── dimensions/D*-*.md
+    ├── languages/{php-laravel,python-fastapi,typescript-node,shell,docker}.md
+    ├── threat-models/{multi-tenant-isolation,secret-management,
+    │                  llm-assisted-code,pii-data-flow,auth-model,
+    │                  ai-runtime,data-loss}.md
+    ├── tools/{_matrix,gitleaks,trivy,semgrep,phpstan-larastan,
+    │         ruff,mypy,biome,hadolint,jscpd,pgtap,auto-dep-updates}.md
+    ├── templates/{full-audit-report,quick-scan-output,
+    │             security-pass-output,triage-and-summary,
+    │             finding-phrasing,ci-github-actions.yml,
+    │             ci-pre-commit.yaml}
+    ├── playbooks/{operations,false-positives}.md
+    ├── extensions/README.md
+    └── scripts/{_detect_stack,_bootstrap_tooling,
+                _doctor_fresh_clone,_findings_to_milestones}.py
 ```
+
+`code-audit/` is the whole skill — copy it anywhere your assistant
+reads skills, or use `install.sh` (next section).
 
 Each file has one clear purpose. Files cross-reference rather than duplicate — updating a fact happens in one place. The skill itself follows the rules it audits (D1 + D2).
 
@@ -192,7 +195,7 @@ Each file has one clear purpose. Files cross-reference rather than duplicate —
 - **Snyk / SonarCloud paid tier.** Trivy + Semgrep + native deps audits cover ~90% for €0.
 - **STRIDE threat-model documents per feature.** Nobody reads them. A 5-line release-time "what changed in trust boundaries?" note works.
 
-See [`claude/code-audit/playbooks/operations.md`](claude/code-audit/playbooks/operations.md) § Anti-patterns for the full list.
+See [`code-audit/playbooks/operations.md`](code-audit/playbooks/operations.md) § Anti-patterns for the full list.
 
 ## Contributing
 

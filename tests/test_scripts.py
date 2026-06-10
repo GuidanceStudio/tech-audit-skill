@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-SCRIPTS = next((REPO / "claude").glob("*/scripts"))
+SCRIPTS = next(p.parent / "scripts" for p in REPO.glob("*/SKILL.md"))
 sys.path.insert(0, str(SCRIPTS))
 
 import _detect_stack  # noqa: E402

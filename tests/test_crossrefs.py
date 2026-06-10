@@ -13,8 +13,8 @@ import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-SKILL = next((REPO / "claude").glob("*/SKILL.md")).parent
-PREFIX = f"claude/{SKILL.name}/"
+SKILL = next(p.parent for p in REPO.glob("*/SKILL.md"))
+PREFIX = f"{SKILL.name}/"
 TOP_DIRS = {
     "cuts", "dimensions", "threat-models", "templates", "tools",
     "languages", "playbooks", "examples", "extensions", "routing",
