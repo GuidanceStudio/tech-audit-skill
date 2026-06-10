@@ -7,7 +7,7 @@ Use this template for `cuts/full.md` output. Write to
 ```markdown
 # Tech audit — <YYYY-MM-DD>
 
-**Auditor**: <name or "Claude code-review skill under <user>'s direction">
+**Auditor**: <name or "Claude code-audit skill under <user>'s direction">
 **Scope**: full 13-dim
 **Repo HEAD at audit time**: <git rev-parse HEAD>
 **Previous audit**: <link to docs/internal/tech-audit-<previous-date>.md if any>
@@ -44,7 +44,7 @@ Use this template for `cuts/full.md` output. Write to
 | D13 | Setup replicability | ... | ... | ... | ... |
 | **Total** | | | **N** | **N** | **N** |
 
-(Project-specific extras from `.code-review/extras/` listed below if present.)
+(Project-specific extras from `.code-audit/extras/` listed below if present.)
 
 ---
 

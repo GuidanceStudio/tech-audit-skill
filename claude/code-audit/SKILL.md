@@ -1,9 +1,9 @@
 ---
-name: code-review
-description: Generalist codebase audit + code review. Routes by intent (quick PR diff, security-only, pre-release, deep per-dimension, or full tech-DD) across a 13-dimension framework that pays special attention to code essentiality, docs integrity, tests-as-adversaries, and setup replicability. Stack-aware via auto-detection (PHP/Laravel, Python/FastAPI, TypeScript/Node, shell, Docker). Lean by design — loads only the files relevant to the chosen cut.
+name: code-audit
+description: Methodical codebase audit across a 13-dimension tech-DD framework. Routes by intent — security pass, release check, deep per-dimension, full tech-DD, or explicit quick scan. Stack-aware (PHP/Laravel, Python/FastAPI, TS/Node, shell, Docker). Use for "audit", "tech DD", "security review", "ready to ship?" — NOT for routine PR diff review.
 ---
 
-# Code review — Router
+# Code audit — Router
 
 This skill produces honest, actionable findings on a codebase. It is
 **not** a generic "tell me if this code is good"; it asks specific,
@@ -15,11 +15,14 @@ It absorbs the best of `anthropics/knowledge-work-plugins/engineering/skills/cod
 ## When to invoke
 
 Trigger keywords (any of):
-- "review this code/PR/codebase/file"
-- "audit my code/project", "tech audit", "tech DD"
+- "audit my code/project/codebase", "tech audit", "tech DD"
 - "security review", "security audit", "vuln scan"
 - "is this ready to ship?", "release check", "pre-release"
-- explicit `/code-review` slash command
+- explicit `/code-audit` slash command
+
+Routine "review this PR/file/diff" requests belong to the builtin
+code-review skill, NOT here. The `quick` cut still exists for when the
+user explicitly asks this skill for a narrow scan.
 
 ## Step 1 — pick the cut
 
@@ -130,7 +133,7 @@ clone fresh.
 
 ## Per-project extension
 
-If the repo has a `.code-review/extras/` directory, load every
+If the repo has a `.code-audit/extras/` directory, load every
 `*.md` file from it AFTER the default dimensions. Use this to add
 project-specific dimensions, threat models, or language gotchas
 without forking the skill.

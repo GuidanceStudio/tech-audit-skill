@@ -5,7 +5,7 @@ For `cuts/security.md` output. Goes inline or to `docs/internal/security-review-
 ```markdown
 # Security review — <YYYY-MM-DD>
 
-**Scope**: <repo name> · **Reviewer**: Claude code-review skill
+**Scope**: <repo name> · **Reviewer**: Claude code-audit skill
 **Stack detected**: <list>
 **Tools run**: <list — e.g. gitleaks, trivy, semgrep, phpstan-taint>
 

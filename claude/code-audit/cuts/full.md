@@ -34,7 +34,7 @@
 4. For each dimension, run all methods in `dimensions/D<N>-*.md`. Load
    `threat-models/*.md` and `tools/*.md` as needed.
 
-5. **Project extensions**: if `.code-review/extras/` exists in the
+5. **Project extensions**: if `.code-audit/extras/` exists in the
    repo, load every `*.md` from it AFTER the default dimensions. Use
    them as additional dimensions (e.g. D14, D15) in the report.
 

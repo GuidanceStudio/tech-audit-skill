@@ -6,7 +6,7 @@ Synthetic report. Stack: PHP/Laravel + Python/FastAPI + TS/Node + Postgres + Doc
 
 # Tech audit — 2026-06-15
 
-**Auditor**: Claude code-review skill under team direction
+**Auditor**: Claude code-audit skill under team direction
 **Scope**: full 13-dim
 **Repo HEAD at audit time**: `abc1234f`
 **Previous audit**: `docs/internal/tech-audit-2026-03-15.md`

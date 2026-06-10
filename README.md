@@ -1,6 +1,10 @@
 # code-repository-audit-skill
 
-A Claude skill for **honest, actionable software audits**. Routes by intent (quick PR review, security pass, pre-release check, deep dimension, or full tech-DD) across a 13-dimension framework.
+A Claude skill for **honest, actionable software audits**. The skill
+installs as **`code-audit`** (renamed from `code-review` in v0.2:
+Claude Code now ships a builtin `code-review` skill for PR diff
+review, and the two names collided — this skill's distinctive value is
+the audit/tech-DD framework, so it took the audit name). Routes by intent (quick PR review, security pass, pre-release check, deep dimension, or full tech-DD) across a 13-dimension framework.
 
 Built for fast-but-solid startups. Generalist core, stack-aware extensions for **PHP/Laravel, Python/FastAPI, TypeScript/Node, shell, and Docker**.
 
@@ -39,14 +43,14 @@ cd code-repository-audit-skill
 bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh)
 ```
 
-The installer copies `claude/code-review/` to `~/.claude/skills/code-review/`. Pass `--force` to overwrite an existing installation.
+The installer copies `claude/code-audit/` to `~/.claude/skills/code-audit/`. Pass `--force` to overwrite an existing installation.
 
 ## Use
 
 In Claude Code, invoke any of:
 
 ```
-/code-review
+/code-audit
 "review this PR"
 "audit my codebase"
 "security review"
@@ -68,7 +72,7 @@ The skill picks the right **cut** based on your phrasing, or asks if it's ambigu
 **Quick PR review**:
 
 ```
-You: /code-review on https://github.com/our-org/our-repo/pull/143
+You: /code-audit on https://github.com/our-org/our-repo/pull/143
 
 Claude: [scans the diff, picks dims based on what was touched, emits a
 quick-scan output with severity-tagged findings + ship/hold verdict]
@@ -125,7 +129,7 @@ D4, D5, D8 carry the ⚠️ default-deep mark because they're the high-blast-rad
 | Quarterly | `full` cut + restore-from-backup drill | Every 3 months (~5-7 h) |
 | Triggered | `deep`, `security` cuts | New integration; post-incident; pre-VC |
 
-See [`claude/code-review/playbooks/operations.md`](claude/code-review/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
+See [`claude/code-audit/playbooks/operations.md`](claude/code-audit/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
 
 ## Severity scheme
 
@@ -137,7 +141,7 @@ See [`claude/code-review/playbooks/operations.md`](claude/code-review/playbooks/
 
 ## Per-project extensions
 
-Drop `.code-review/extras/*.md` files in your repo to add project-specific dimensions, threat models, or stack files. The skill loads them after the defaults. See [`claude/code-review/extensions/README.md`](claude/code-review/extensions/README.md) for the schema.
+Drop `.code-audit/extras/*.md` files in your repo to add project-specific dimensions, threat models, or stack files. The skill loads them after the defaults. See [`claude/code-audit/extensions/README.md`](claude/code-audit/extensions/README.md) for the schema.
 
 ## Repository layout
 
@@ -147,7 +151,7 @@ code-repository-audit-skill/
 ├── README.md                        # this file
 ├── LICENSE                          # Apache-2.0
 └── claude/
-    └── code-review/                 # the skill that gets copied to ~/.claude/skills/
+    └── code-audit/                  # the skill that gets copied to ~/.claude/skills/
         ├── SKILL.md                 # routing spine — Claude loads this first
         ├── routing/detect-stack.md
         ├── cuts/{quick,security,release,deep,full}.md
@@ -189,7 +193,7 @@ Each file has one clear purpose. Files cross-reference rather than duplicate —
 - **Snyk / SonarCloud paid tier.** Trivy + Semgrep + native deps audits cover ~90% for €0.
 - **STRIDE threat-model documents per feature.** Nobody reads them. A 5-line release-time "what changed in trust boundaries?" note works.
 
-See [`claude/code-review/playbooks/operations.md`](claude/code-review/playbooks/operations.md) § Anti-patterns for the full list.
+See [`claude/code-audit/playbooks/operations.md`](claude/code-audit/playbooks/operations.md) § Anti-patterns for the full list.
 
 ## Contributing
 

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# code-review skill installer.
+# code-audit skill installer.
 #
 # Copies the skill files into the user's Claude skill directory so the
-# `/code-review` slash command and routing become available.
+# `/code-audit` slash command and routing become available.
 #
 # Local mode:  ./install.sh [OPTIONS]
 # Remote mode: bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh)
 
-REPO_URL="${CODE_REVIEW_REPO_URL:-https://github.com/GuidanceStudio/code-repository-audit-skill.git}"
+REPO_URL="${CODE_AUDIT_REPO_URL:-https://github.com/GuidanceStudio/code-repository-audit-skill.git}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 FORCE=false
-TARGET_DIR="${HOME}/.claude/skills/code-review"
+TARGET_DIR="${HOME}/.claude/skills/code-audit"
 CLEANUP_DIR=""
 
 cleanup_temp() {
@@ -25,7 +25,7 @@ trap cleanup_temp EXIT
 
 usage() {
     cat <<EOF
-Install the code-review Claude skill.
+Install the code-audit Claude skill.
 
 Usage:
     ./install.sh [OPTIONS]
@@ -36,7 +36,7 @@ Options:
     --help          Show this message.
 
 Environment:
-    CODE_REVIEW_REPO_URL    Override the remote-mode clone URL.
+    CODE_AUDIT_REPO_URL     Override the remote-mode clone URL.
 EOF
 }
 
@@ -50,8 +50,8 @@ while [ $# -gt 0 ]; do
 done
 
 # Detect local vs remote mode
-if [ -d "$SCRIPT_DIR/claude/code-review" ]; then
-    SRC_ROOT="$SCRIPT_DIR/claude/code-review"
+if [ -d "$SCRIPT_DIR/claude/code-audit" ]; then
+    SRC_ROOT="$SCRIPT_DIR/claude/code-audit"
 else
     if ! command -v git >/dev/null 2>&1; then
         echo "error: remote install requires 'git' on PATH" >&2
@@ -60,9 +60,9 @@ else
     CLEANUP_DIR="$(mktemp -d)"
     echo "Cloning $REPO_URL into temporary dir..."
     git clone --depth=1 "$REPO_URL" "$CLEANUP_DIR" >/dev/null 2>&1
-    SRC_ROOT="$CLEANUP_DIR/claude/code-review"
+    SRC_ROOT="$CLEANUP_DIR/claude/code-audit"
     if [ ! -d "$SRC_ROOT" ]; then
-        echo "error: cloned repo does not contain claude/code-review/" >&2
+        echo "error: cloned repo does not contain claude/code-audit/" >&2
         exit 1
     fi
 fi
@@ -83,12 +83,12 @@ fi
 
 mkdir -p "$(dirname "$TARGET_DIR")"
 cp -r "$SRC_ROOT" "$TARGET_DIR"
+find "$TARGET_DIR" -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 
 echo
-echo "✅ Installed code-review skill to $TARGET_DIR"
+echo "✅ Installed code-audit skill to $TARGET_DIR"
 echo
-echo "Invoke from Claude with /code-review, or by asking for a review:"
-echo "    \"review this PR\""
+echo "Invoke from Claude with /code-audit, or by asking for an audit:"
 echo "    \"audit my codebase\""
 echo "    \"security review\""
 echo "    \"is this ready to ship?\""

@@ -57,30 +57,34 @@ with correct IDs; `git ls-files | grep pycache` is empty.
 
 ## M2 — Rename to de-conflict from the builtin `/code-review`
 
-Status: **TODO** — name confirmed by user: `code-audit` (2026-06-10)
+Status: **DONE** (2026-06-10) — IDD (rename/content; regression guard =
+M1 tests, path-agnostic via glob, still green 6/6). Done-when verified:
+installed at `~/.claude/skills/code-audit/`, old `code-review/` copy
+removed, install excludes `__pycache__`. Legit `code-review` mentions
+survive only as upstream project names + the builtin reference.
 
 Claude Code now ships a builtin `code-review` skill; two registered
 skills share the name and routing is ambiguous. New name:
 **`code-audit`** — the distinctive value is the audit/tech-DD
 framework, not PR review, which the builtin already covers.
 
-- [ ] Rename `claude/code-review/` → `claude/code-audit/`, update
+- [x] Rename `claude/code-review/` → `claude/code-audit/`, update
   `name:` in SKILL.md frontmatter and every self-reference
   (README.md, install.sh paths, cross-references inside the skill).
-- [ ] Rename the per-project extension dir too: `.code-review/extras/`
+- [x] Rename the per-project extension dir too: `.code-review/extras/`
   → `.code-audit/extras/` (extensions/README.md, SKILL.md, cuts/full).
   No external users yet (v0.1.0) — no back-compat shim needed.
-- [ ] Rewrite the SKILL.md frontmatter `description:` — it is injected
+- [x] Rewrite the SKILL.md frontmatter `description:` — it is injected
   into EVERY session's context, used or not. Make it audit-first (so
   model routing doesn't compete with the builtin) and cut it to ~40
   words without losing the trigger surface.
-- [ ] Narrow the trigger keywords in SKILL.md: drop bare
+- [x] Narrow the trigger keywords in SKILL.md: drop bare
   "review this PR/file" (let the builtin own quick diff review); keep
   audit / tech-DD / security review / release check / `/code-audit`.
   Keep the `quick` cut itself (still useful when explicitly invoked).
-- [ ] Install under the new name; remove the old
+- [x] Install under the new name; remove the old
   `~/.claude/skills/code-review/` copy.
-- [ ] Note the rename + rationale in README.md.
+- [x] Note the rename + rationale in README.md.
 
 Exit gate: `/code-audit` invokes this skill; no name collision warning;
 old installed copy gone.

@@ -7,7 +7,7 @@ Synthetic. Stack: Python 3.13 + FastAPI + asyncpg + Postgres. Reference for `cut
 # Security review — 2026-06-10
 
 **Scope**: `gateway/` (FastAPI service)
-**Reviewer**: Claude code-review skill
+**Reviewer**: Claude code-audit skill
 **Stack detected**: Python / FastAPI / asyncpg / Postgres
 **Tools run**: gitleaks, pip-audit, ruff (with S codes), mypy, semgrep (`p/owasp-top-ten`, `p/fastapi`), trivy (fs)
 
