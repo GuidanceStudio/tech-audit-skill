@@ -73,7 +73,7 @@ def main() -> None:
     scratch = Path(args.scratch) if args.scratch else Path(tempfile.mkdtemp(prefix="audit-fresh-"))
     print(f"Scratch dir: {scratch}")
     if scratch.exists() and any(scratch.iterdir()):
-        print(f"  (cleaning existing scratch)")
+        print("  (cleaning existing scratch)")
         shutil.rmtree(scratch)
     scratch.mkdir(parents=True, exist_ok=True)
 

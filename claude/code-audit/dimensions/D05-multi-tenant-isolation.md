@@ -56,7 +56,7 @@ Each raw query must include `WHERE tenant_id = ?` (or equivalent). Missing → �
 The audit you can run repeatedly. Authenticate as tenant A; try every endpoint with tenant B's IDs:
 
 ```python
-# scripts/_cross_tenant_probe.py (sketch)
+# cross-tenant probe (sketch — adapt to your stack and test runner)
 TENANT_A = ("alice@acme.example", "...")
 TENANT_B_AGENT_ID = "01HAB-..."   # known to exist on tenant B
 

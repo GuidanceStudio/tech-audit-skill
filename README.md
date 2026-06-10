@@ -155,7 +155,7 @@ code-repository-audit-skill/
         ├── SKILL.md                 # routing spine — Claude loads this first
         ├── routing/detect-stack.md
         ├── cuts/{quick,security,release,deep,full}.md
-        ├── dimensions/D{01..13}-*.md
+        ├── dimensions/D*-*.md   # the 13 dimensions
         ├── languages/{php-laravel,python-fastapi,typescript-node,shell,docker}.md
         ├── threat-models/{multi-tenant-isolation,secret-management,
         │                  llm-assisted-code,pii-data-flow,auth-model,

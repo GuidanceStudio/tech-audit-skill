@@ -33,7 +33,7 @@ ambiguous.
 | Cut | When | What loads | Effort |
 |---|---|---|---|
 | **quick** | "review this file/PR" | `cuts/quick.md` + matching `languages/*.md` | 5-10 min |
-| **security** | "security review", "OWASP" | `cuts/security.md` + D4 + D5 + `threat-models/{auth,multi-tenant,secret-mgmt,pii}.md` + matching languages | 30 min |
+| **security** | "security review", "OWASP" | `cuts/security.md` + D4 + D5 + `threat-models/{auth-model,multi-tenant-isolation,secret-management,pii-data-flow}.md` + matching languages | 30 min |
 | **release** | "ready to ship?", "release check" | `cuts/release.md` + scan over all dim, deep on diff since last tag | 30 min |
 | **deep** | "deep audit on D5" / "review tests" | `cuts/deep.md` + the listed dimensions | 1–2 h per dim |
 | **full** | "full audit", "tech DD" | `cuts/full.md` + every dimension (D1/D2/D3/D13 deep, ⚠️ deep, rest scan) | 5–7 h |

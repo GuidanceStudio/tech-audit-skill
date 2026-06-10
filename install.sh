@@ -32,6 +32,8 @@ Usage:
 
 Options:
     --force         Overwrite an existing installation without prompting.
+    --check         Compare the installed copy against the source tree
+                    (no writes); exits 1 and reports DRIFT on differences.
     --target DIR    Install to DIR instead of $TARGET_DIR.
     --help          Show this message.
 
@@ -40,9 +42,11 @@ Environment:
 EOF
 }
 
+CHECK=false
 while [ $# -gt 0 ]; do
     case "$1" in
         --force) FORCE=true; shift ;;
+        --check) CHECK=true; shift ;;
         --target) TARGET_DIR="$2"; shift 2 ;;
         --help|-h) usage; exit 0 ;;
         *) echo "unknown option: $1" >&2; usage; exit 1 ;;
@@ -67,6 +71,22 @@ else
     fi
 fi
 
+# Drift check mode — no writes
+if [ "$CHECK" = true ]; then
+    if [ ! -d "$TARGET_DIR" ]; then
+        echo "DRIFT: code-audit is not installed at $TARGET_DIR"
+        exit 1
+    fi
+    DIFF_OUT="$(diff -r --exclude=__pycache__ --exclude=.installed-from "$SRC_ROOT" "$TARGET_DIR" 2>&1)" || true
+    if [ -n "$DIFF_OUT" ]; then
+        echo "DRIFT: $TARGET_DIR differs from the source tree:"
+        echo "$DIFF_OUT" | head -10
+        exit 1
+    fi
+    echo "OK: $TARGET_DIR matches the source tree"
+    exit 0
+fi
+
 # Confirm overwrite
 if [ -d "$TARGET_DIR" ]; then
     if [ "$FORCE" = true ]; then
@@ -84,6 +104,11 @@ fi
 mkdir -p "$(dirname "$TARGET_DIR")"
 cp -r "$SRC_ROOT" "$TARGET_DIR"
 find "$TARGET_DIR" -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+
+# Stamp the source git SHA so "what version is deployed?" has an answer
+if git -C "$(dirname "$SRC_ROOT")" rev-parse --short HEAD >/dev/null 2>&1; then
+    git -C "$(dirname "$SRC_ROOT")" rev-parse --short HEAD > "$TARGET_DIR/.installed-from"
+fi
 
 echo
 echo "✅ Installed code-audit skill to $TARGET_DIR"

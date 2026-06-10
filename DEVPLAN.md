@@ -311,13 +311,19 @@ finding under "fixed since last audit".
 
 ## M9 — Skill self-tests, CI, drift check
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — TDD: crossref linter + --check tests
+written first (red: 3 real dead refs found and fixed — SKILL.md
+threat-model shorthand names, D05 phantom probe script, README D{01..13}
+pattern; --check unimplemented). Then install.sh --check + .installed-from
+SHA stamp + GitHub Actions (repo is PUBLIC → free runners, no billing
+fallback needed). Suite: 11 green + ruff clean. 7-col TSV test deferred
+to M6 with the feature.
 
 The skill preaches tests-as-adversaries and has zero tests. Dev-only
 material lives in repo-root `tests/` — NOT under `claude/`, so the
 installed skill stays lean.
 
-- [ ] **pytest suite** (`tests/` + fixture mini-repos):
+- [x] **pytest suite** (`tests/` + fixture mini-repos):
   - `_detect_stack.py`: root markers, nested monorepo (the
     cerase-core regression from M1), no markers (exit 2).
   - `_findings_to_milestones.py`: round-trip with unsorted severities
@@ -326,10 +332,10 @@ installed skill stays lean.
     a skill file exists, and every shipped `.md` is reachable from
     SKILL.md (dead-link + dead-content check — enforce the skill's own
     "no dead content" rule mechanically).
-- [ ] **CI**: GitHub Action running ruff + pytest on push. Caveat: if
+- [x] **CI**: GitHub Action running ruff + pytest on push. Caveat: if
   the repo is private and org Actions are billing-blocked, fall back
   to a documented local pre-push hook instead.
-- [ ] **Install drift check.** `install.sh --check`: compare the
+- [x] **Install drift check.** `install.sh --check`: compare the
   installed copy against the dev tree (checksum diff, `__pycache__`
   excluded) and report drift; on install, stamp the installed dir with
   the source git SHA so "what version is deployed?" has an answer.
