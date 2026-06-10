@@ -488,7 +488,7 @@ and `--target manual` prints a copy-anywhere path. Suite green.
 
 ## Phase J — UX & UI depth
 
-### M13: D15 — UX & interaction design
+### M13: D15 — UX & interaction design ✅
 
 **Why:** No dimension audits user experience. D12 covers admin-surface
 source coherence only; rendered review lives in `ui-review`. A
@@ -515,12 +515,12 @@ surface is detected; add a frontend sub-marker to `routing/detect-stack.md`
 (react/vue/svelte/angular deps, `.tsx/.vue/.blade.php` templates).
 
 **Tasks:**
-- [ ] Write `dimensions/D15-ux-interaction.md` (base + advanced sections)
-- [ ] Add D15 to the SKILL.md dimension registry with its tag + topics
-- [ ] Frontend sub-marker in `routing/detect-stack.md` (flags D15/D16 default-deep)
-- [ ] Wire into cuts: `quick` (touched UI → D15), `deep` topic map via registry, `full` via tags
-- [ ] Cross-reference D12 + `ui-review` with a clear who-owns-what boundary
-- [ ] crossref linter green
+- [x] Write `dimensions/D15-ux-interaction.md` (base + advanced sections)
+- [x] Add D15 to the SKILL.md dimension registry with its tag + topics
+- [x] Frontend sub-marker in `routing/detect-stack.md` (flags D15/D16 default-deep)
+- [x] Wire into cuts: `quick` (touched UI → D15), `deep` topic map via registry, `full` via tags
+- [x] Cross-reference D12 + `ui-review` with a clear who-owns-what boundary
+- [x] crossref linter green
 
 **Done when:** D15 exists in the registry and cuts, runs source-level
 with no browser, and its advanced section delegates the rendered pass

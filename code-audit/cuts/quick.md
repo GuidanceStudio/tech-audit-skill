@@ -28,7 +28,8 @@
    - Touched query layer → D5 (multi-tenant) + D9 (data integrity).
    - Touched migrations → D9.
    - Touched bootstrap / Dockerfile / docker-compose → D13 + D6.
-   - Touched UI / Filament / admin pages → D12.
+   - Touched UI / Filament / admin pages → D12 (admin coherence) + D15
+     (UX) + D16 (UI craft) on the changed components, source-level.
    - Touched an LLM/agent/tool-gateway surface → D4 + `threat-models/ai-runtime.md`.
    - **Always: D14 (correctness on the diff) + D1 (essentiality on the diff).**
      Correctness is the primary reason a quick scan exists — run it on

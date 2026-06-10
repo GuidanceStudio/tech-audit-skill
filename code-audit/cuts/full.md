@@ -28,9 +28,11 @@
    matching `languages/<stack>.md`.
 
 3. **Run every dimension**, treatment per the registry tags in
-   `SKILL.md`: always-deep + default-deep → deep; scan → scan
-   (promote to deep on a 🔴); release-only → skip unless this audit
-   coincides with a release tag.
+   `SKILL.md`: always-deep + default-deep → deep; ui-deep → deep when a
+   UI surface is detected (base source pass always; advanced rendered
+   pass via `ui-review` when the app is runnable), else skip with a "no
+   UI surface" note; scan → scan (promote to deep on a 🔴);
+   release-only → skip unless this audit coincides with a release tag.
 
 4. For each dimension, run all methods in `dimensions/D<N>-*.md`. Load
    `threat-models/*.md` and `tools/*.md` as needed. **Append each

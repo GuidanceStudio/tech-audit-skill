@@ -76,13 +76,19 @@ via `scripts/_findings_to_milestones.py`.
 | D12 | Admin surface | scan | admin UI, Filament, empty states |
 | D13 | Setup replicability | always-deep | setup, fresh clone, bootstrap |
 | D14 | Correctness & robustness | always-deep | bugs, correctness, races, idempotency, error paths |
+| D15 | UX & interaction | ui-deep | ux, flows, states, forms, navigation, a11y, i18n |
+| D16 | UI & design-system craft | ui-deep | ui, design system, tokens, typography, spacing, visual |
 
-The 13-dimension framing in prose is historical; D14 was added in v0.2.
+The "13-dimension" framing in older prose is historical; D14 was added
+in v0.2, D15–D16 in v0.3.
 
 **always-deep** dims decay invisibly between audits — they run deep in
 every cut that touches them. **default-deep** run deep when the
-product has the matching surface. **scan** dims go deep only when a 🔴
-surfaces. **release-only** runs when a tag is being cut.
+product has the matching surface. **ui-deep** run deep when a UI
+surface is detected (frontend markers per `routing/detect-stack.md`);
+each has a base source-level pass and an advanced rendered pass that
+delegates to the `ui-review` skill. **scan** dims go deep only when a
+🔴 surfaces. **release-only** runs when a tag is being cut.
 
 ## Severity and status
 

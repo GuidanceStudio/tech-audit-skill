@@ -56,6 +56,22 @@ user to `.code-audit/extras/language-<name>.md` to add one. Don't load
 a sibling framework's file and "note the differences" — that smuggles
 in wrong-stack assumptions.
 
+## UI-surface sub-marker (cross-cutting)
+
+Flag the product as having a UI surface — which makes **D15 (UX)** and
+**D16 (UI)** default-deep (`ui-deep` tag) — when any of these are
+present:
+
+- a frontend framework dep (`react`, `vue`, `svelte`, `@angular/*`,
+  `solid-js`, `next`, `nuxt`, `astro`) in `package.json`
+- view templates: `.tsx` / `.jsx` / `.vue` / `.svelte` / `.blade.php`
+  / `.erb` / `.razor`
+- a styling system: Tailwind config, CSS-in-JS, a `design-tokens` /
+  `theme` file, or a component-library dep
+
+No UI surface (pure API / CLI / library) → skip D15 + D16 and note "no
+UI surface" in the report.
+
 ## Agentic-product sub-marker (cross-cutting)
 
 Independent of language, flag the product as embedding an AI runtime
