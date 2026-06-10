@@ -1,6 +1,6 @@
 # Per-project extensions
 
-Drop project-specific audit material in `.code-audit/extras/` at the repo root. The skill loads every `*.md` file from that directory AFTER the default 13 dimensions.
+Drop project-specific audit material in `.code-audit/extras/` at the repo root. The skill loads every `*.md` file from that directory AFTER the default dimensions.
 
 ## When to use
 
@@ -64,7 +64,7 @@ If an extension you've written would be useful to other projects (not specific t
 
 **Question**: "Are voice prompts intelligible, locale-appropriate, latency-acceptable?"
 
-Project-specific to telephony products. Default 13 dims don't cover this.
+Project-specific to telephony products. The default dimensions don't cover this.
 
 ## Method
 

@@ -62,7 +62,7 @@ what changed since the last tag.
 7. **Emit per `templates/triage-and-summary.md`** (release section):
    - Header: previous tag, planned tag, diff stats.
    - Trust-boundary changes section (the focused security pass).
-   - Status overview table for all 13 dim.
+   - Status overview table for all dimensions.
    - Ship-block list (🔴 only).
    - Things to fix this week (🟡 likely worth before next tag).
    - Things accepted as risk (🟡 deferred, with reason).

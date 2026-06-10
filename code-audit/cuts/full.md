@@ -1,6 +1,6 @@
 # Full audit cut
 
-5-7 hours. The complete 13-dimension tech-DD report.
+The complete multi-dimension tech-DD report.
 
 ## When to invoke
 
@@ -42,7 +42,7 @@
 
 5. **Project extensions**: if `.code-audit/extras/` exists in the
    repo, load every `*.md` from it AFTER the default dimensions. Use
-   them as additional dimensions (e.g. D15, D16) in the report.
+   them as additional dimensions (e.g. D17+) in the report.
 
 6. **Run the over-engineering deep-dive** if D1 surfaces ≥5 findings:
    write a companion file `docs/internal/over-engineering-audit-<date>.md`
@@ -53,7 +53,7 @@
    - Header (auditor, scope, repo HEAD).
    - Executive summary (3 bullets — top risk, top strength, biggest
      gap).
-   - Status overview table (13 dim × status).
+   - Status overview table (every dimension × status).
    - Per-dim findings (all 🔴 + 🟡, sample of 🟢).
    - Triage section: proposed follow-up milestones with effort
      estimates.
@@ -118,6 +118,6 @@ inline if no such dir exists.
 
 ## Cross-references
 
-- All 13 `dimensions/D<N>-*.md` files.
+- All `dimensions/D<N>-*.md` method catalogs.
 - `extensions/README.md` — how project-specific extras work.
 - `templates/full-audit-report.md` — output template.

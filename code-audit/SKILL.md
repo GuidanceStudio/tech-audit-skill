@@ -1,6 +1,6 @@
 ---
 name: code-audit
-description: Methodical codebase audit across a 13-dimension tech-DD framework. Routes by intent — security pass, release check, deep per-dimension, full tech-DD, or explicit quick scan. Stack-aware (PHP/Laravel, Python/FastAPI, TS/Node, shell, Docker). Use for "audit", "tech DD", "security review", "ready to ship?" — NOT for routine PR diff review.
+description: Methodical codebase audit across a multi-dimension tech-DD framework. Routes by intent — security pass, release check, deep per-dimension, full tech-DD, or explicit quick scan. Stack-aware (PHP/Laravel, Python/FastAPI, TS/Node, shell, Docker). Use for "audit", "tech DD", "security review", "ready to ship?" — NOT for routine PR diff review.
 ---
 
 # Code audit — Router

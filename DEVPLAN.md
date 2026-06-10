@@ -526,7 +526,7 @@ surface is detected; add a frontend sub-marker to `routing/detect-stack.md`
 with no browser, and its advanced section delegates the rendered pass
 to `ui-review`/Playwright.
 
-### M14: D16 — UI & design-system craft
+### M14: D16 — UI & design-system craft ✅
 
 **Why:** No dimension audits visual/UI craft at the source level, and
 the user wants a "Western scale-up" aesthetic bar made explicit.
@@ -547,11 +547,11 @@ D15 for visual-design + responsive checks on real screenshots.
 PoC/Production bars + cross-refs. Same registry tag as D15.
 
 **Tasks:**
-- [ ] Write `dimensions/D16-ui-design-system.md` (base + advanced; Western-scale-up bar named)
-- [ ] Add D16 to the SKILL.md registry; share the frontend sub-marker with D15
-- [ ] Wire into cuts (quick/deep/full) alongside D15
-- [ ] Cross-reference D15 + D12 + `ui-review`; de-duplicate the rendered-pass hand-off (one shared note, not two)
-- [ ] crossref linter green; full suite green; `install.sh --check` OK after redeploy
+- [x] Write `dimensions/D16-ui-design-system.md` (base + advanced; Western-scale-up bar named)
+- [x] Add D16 to the SKILL.md registry; share the frontend sub-marker with D15
+- [x] Wire into cuts (quick/deep/full) alongside D15
+- [x] Cross-reference D15 + D12 + `ui-review`; de-duplicate the rendered-pass hand-off (one shared note, not two)
+- [x] crossref linter green; full suite green; `install.sh --check` OK after redeploy
 
 **Done when:** D16 exists with base + advanced passes, names the
 Western-scale-up reference bar, shares the rendered hand-off with D15,
