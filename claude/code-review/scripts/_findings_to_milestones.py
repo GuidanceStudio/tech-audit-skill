@@ -59,16 +59,23 @@ def sev_order(s: str) -> int:
     return {"🔴": 0, "red": 0, "🟡": 1, "yellow": 1, "🟢": 2, "green": 2}.get(s, 99)
 
 
-def render_triage_table(findings: list[Finding], prefix: str, start: int) -> tuple[str, dict[str, str]]:
-    """Return (markdown table, map from finding-id → milestone-id)."""
-    findings = sorted(findings, key=lambda f: (sev_order(f.severity), f.dim))
+def finding_key(f: Finding) -> tuple[str, str, str]:
+    """Identity of a finding, used to pair table IDs with stub IDs."""
+    return (f.dim, f.location, f.title)
+
+
+def render_triage_table(findings: list[Finding], prefix: str, start: int) -> tuple[str, dict[tuple[str, str, str], str]]:
+    """Return (markdown table, map from finding identity → milestone-id).
+
+    `findings` must already be sorted (main() sorts once for both renderers).
+    """
     rows: list[str] = ["| Finding | Suggested milestone | Effort |", "|---|---|---|"]
-    milestone_map: dict[str, str] = {}
+    milestone_map: dict[tuple[str, str, str], str] = {}
     counter = start
     for f in findings:
         if f.severity in ("🔴", "red"):
             mid = f"{prefix}-{counter}"
-            milestone_map[f"{f.dim}-{counter}"] = mid
+            milestone_map[finding_key(f)] = mid
             rows.append(
                 f"| {f.severity} {f.dim} @ `{f.location}` — {f.title} | "
                 f"**{mid}**: {f.title} | {f.effort} |"
@@ -82,7 +89,7 @@ def render_triage_table(findings: list[Finding], prefix: str, start: int) -> tup
     return "\n".join(rows), milestone_map
 
 
-def render_milestone_stubs(findings: list[Finding], milestone_map: dict[str, str]) -> str:
+def render_milestone_stubs(findings: list[Finding], milestone_map: dict[tuple[str, str, str], str]) -> str:
     """One milestone stub per 🔴; a single grouped stub per dim for 🟡."""
     reds = [f for f in findings if f.severity in ("🔴", "red")]
     yellows = [f for f in findings if f.severity in ("🟡", "yellow")]
@@ -90,7 +97,7 @@ def render_milestone_stubs(findings: list[Finding], milestone_map: dict[str, str
     out: list[str] = []
 
     for i, f in enumerate(reds):
-        mid = list(milestone_map.values())[i] if i < len(milestone_map) else f"AUDIT-{i + 1}"
+        mid = milestone_map.get(finding_key(f), f"AUDIT-{i + 1}")
         out.append(
             f"## {mid} — {f.title}\n\n"
             f"**Source**: audit finding {f.severity} @ `{f.location}` (dim {f.dim}).\n\n"
@@ -133,6 +140,9 @@ def main() -> None:
     if not findings:
         print("no findings on stdin", file=sys.stderr)
         sys.exit(1)
+
+    # Sort once; both renderers receive the same ordering.
+    findings = sorted(findings, key=lambda f: (sev_order(f.severity), f.dim))
 
     table, mmap = render_triage_table(findings, args.prefix, args.start)
     stubs = render_milestone_stubs(findings, mmap)

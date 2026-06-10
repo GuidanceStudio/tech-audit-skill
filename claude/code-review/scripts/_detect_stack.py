@@ -4,6 +4,10 @@
 Emits a space-separated list of stack tags to stdout, suitable for piping
 into shell case-statements or passing as args to subsequent steps.
 
+Markers are searched recursively (depth limit, dependency/build dirs
+pruned) so nested layouts — monorepos with services in subdirectories —
+are detected too.
+
 Usage:
     python3 _detect_stack.py [REPO_ROOT]
 
@@ -18,60 +22,86 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+MAX_DEPTH = 3
+PRUNE_DIRS = {
+    ".git",
+    "vendor",
+    "node_modules",
+    "storage",
+    "dist",
+    "build",
+    "__pycache__",
+    ".venv",
+    "venv",
+    ".idea",
+    ".vscode",
+}
+PYTHON_MARKERS = {"pyproject.toml", "requirements.txt", "setup.py", "Pipfile"}
+DOCKER_MARKERS = {
+    "Dockerfile",
+    "docker-compose.yml",
+    "docker-compose.yaml",
+    "compose.yml",
+    "compose.yaml",
+}
+
+
+def iter_marker_files(root: Path, max_depth: int = MAX_DEPTH):
+    """Yield files up to max_depth, pruning dependency/build directories."""
+
+    def walk(directory: Path, depth: int):
+        try:
+            entries = sorted(directory.iterdir())
+        except (PermissionError, OSError):
+            return
+        for path in entries:
+            if path.is_dir():
+                if depth < max_depth and path.name not in PRUNE_DIRS:
+                    yield from walk(path, depth + 1)
+            elif path.is_file():
+                yield path
+
+    yield from walk(root, 0)
+
 
 def detect(root: Path) -> list[str]:
-    """Walk known marker files. Return sorted list of stack tags."""
+    """Scan known marker files recursively. Return sorted list of stack tags."""
     tags: set[str] = set()
 
-    # PHP
-    composer = root / "composer.json"
-    if composer.is_file():
-        tags.add("php")
-        content = composer.read_text(errors="ignore")
-        if '"laravel/framework"' in content or '"illuminate/' in content:
-            tags.add("php-laravel")
-        elif '"symfony/' in content:
-            tags.add("php-symfony")
+    for path in iter_marker_files(root):
+        name = path.name
 
-    # Python
-    pyproject = root / "pyproject.toml"
-    reqs = root / "requirements.txt"
-    setup = root / "setup.py"
-    pipfile = root / "Pipfile"
-    if pyproject.is_file() or reqs.is_file() or setup.is_file() or pipfile.is_file():
-        tags.add("python")
-        combined = ""
-        for p in (pyproject, reqs, setup, pipfile):
-            if p.is_file():
-                combined += p.read_text(errors="ignore")
-        if "fastapi" in combined.lower():
-            tags.add("python-fastapi")
-        if "django" in combined.lower():
-            tags.add("python-django")
-        if "flask" in combined.lower():
-            tags.add("python-flask")
+        if name == "composer.json":
+            tags.add("php")
+            content = path.read_text(errors="ignore")
+            if '"laravel/framework"' in content or '"illuminate/' in content:
+                tags.add("php-laravel")
+            elif '"symfony/' in content:
+                tags.add("php-symfony")
 
-    # TypeScript / Node
-    if (root / "package.json").is_file():
-        tags.add("typescript")
-        pkg = (root / "package.json").read_text(errors="ignore")
-        if '"next"' in pkg:
-            tags.add("typescript-nextjs")
-        if '"vite"' in pkg:
-            tags.add("typescript-vite")
+        elif name in PYTHON_MARKERS:
+            tags.add("python")
+            content = path.read_text(errors="ignore").lower()
+            if "fastapi" in content:
+                tags.add("python-fastapi")
+            if "django" in content:
+                tags.add("python-django")
+            if "flask" in content:
+                tags.add("python-flask")
 
-    # Shell (any .sh in repo root or top-level dirs)
-    for p in list(root.glob("*.sh")) + list(root.glob("scripts/*.sh")) + list(root.glob("bin/*.sh")):
-        if p.is_file():
+        elif name == "package.json":
+            tags.add("typescript")
+            content = path.read_text(errors="ignore")
+            if '"next"' in content:
+                tags.add("typescript-nextjs")
+            if '"vite"' in content:
+                tags.add("typescript-vite")
+
+        elif name.endswith(".sh"):
             tags.add("shell")
-            break
 
-    # Docker
-    if any(
-        (root / f).is_file()
-        for f in ("Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml")
-    ):
-        tags.add("docker")
+        elif name in DOCKER_MARKERS:
+            tags.add("docker")
 
     return sorted(tags)
 

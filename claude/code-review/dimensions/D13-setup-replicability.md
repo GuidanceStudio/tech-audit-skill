@@ -34,7 +34,7 @@ Every required step OUTSIDE that sequence → finding.
 # Operator-side commands that should be in the CLI, not in raw docs
 grep -rE 'docker compose|docker exec|docker run|chown|chmod|sudo|apt install|pip install|brew install' \
   README.md docs/ 2>/dev/null \
-  | grep -vE 'tools/|examples/|threat-models/' \
+  | grep -vE 'docs/runbook/|docs/recovery/|docs/troubleshooting/' \
   | head -30
 ```
 

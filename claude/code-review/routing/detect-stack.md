@@ -4,14 +4,18 @@ Quick algorithm to figure out which `languages/*.md` files to load.
 
 ## Algorithm
 
-Scan the repo root + first level for markers:
+Scan the repo **recursively** for markers (depth ≤3, pruning
+dependency/build dirs: `vendor/`, `node_modules/`, `.git/`,
+`storage/`, `dist/`, `build/`, virtualenvs) — nested layouts
+(monorepos with services in subdirectories) are the norm, not the
+exception:
 
 | Marker file/glob | Load |
 |---|---|
 | `composer.json` | `languages/php-laravel.md` |
 | `pyproject.toml`, `requirements.txt`, `setup.py`, `Pipfile` | `languages/python-fastapi.md` |
 | `package.json` | `languages/typescript-node.md` |
-| `*.sh` files in the repo root | `languages/shell.md` |
+| `*.sh` files | `languages/shell.md` |
 | `Dockerfile`, `docker-compose.yml`, `compose.yml` | `languages/docker.md` |
 
 Multiple matches → load multiple files. Polyglot is the norm.

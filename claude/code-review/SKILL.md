@@ -41,7 +41,8 @@ no narrower target.
 
 ## Step 2 — detect the stack
 
-Auto-detect from repo markers (single shell pass, < 1s):
+Auto-detect from repo markers — searched **recursively** (depth ≤3,
+dependency/build dirs pruned), so nested monorepo layouts are covered:
 
 | Marker | Loads | |
 |---|---|---|
