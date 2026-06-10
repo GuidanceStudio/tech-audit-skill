@@ -91,12 +91,16 @@ old installed copy gone.
 
 ## M3 — Pipeline: persistent findings + adversarial verification
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — IDD (process docs; crossref linter
+green 11/11). Pipeline defined once in SKILL.md § Findings pipeline
+(incremental findings.tsv per dimension, resume, 🔴 refutation,
+ID-scheme match) and referenced from deep/full/release cuts; provenance
+line added to both report templates; .code-audit/work/ gitignored.
 
 The two highest-value/lowest-cost pipeline upgrades. Both are edits to
 cuts + SKILL.md, no new scripts.
 
-- [ ] **Incremental findings file.** Define a canonical working file
+- [x] **Incremental findings file.** Define a canonical working file
   `.code-audit/work/<YYYY-MM-DD>/findings.tsv` (same TSV schema
   `_findings_to_milestones.py` consumes: severity, dim, location,
   title, fix, effort). `deep`, `full`, and `release` cuts append to it
@@ -105,7 +109,7 @@ cuts + SKILL.md, no new scripts.
   file, not from conversational memory. `quick` and `security` stay
   inline (short enough). Document the resume flow: on re-invocation,
   if today's findings.tsv exists, skip completed dims and continue.
-- [ ] **Refutation pass for 🔴.** Add to every cut's procedure (and as
+- [x] **Refutation pass for 🔴.** Add to every cut's procedure (and as
   a top-level rule in SKILL.md § Step 4): before emitting, each 🔴
   finding must survive an explicit refutation attempt — re-read the
   actual code path and try to prove the finding wrong (auth check
@@ -113,10 +117,10 @@ cuts + SKILL.md, no new scripts.
   Refuted → drop or downgrade with the reason noted. Unverifiable
   (can't read the relevant code / would need runtime) → keep but mark
   confidence (see M6).
-- [ ] **Update templates** (`triage-and-summary.md`,
+- [x] **Update templates** (`triage-and-summary.md`,
   `full-audit-report.md`) with a one-line provenance note: findings
   source file path + "all 🔴 survived refutation".
-- [ ] **Match the target repo's milestone convention.** When emitting
+- [x] **Match the target repo's milestone convention.** When emitting
   milestone stubs, detect the target devplan's existing ID scheme
   (e.g. `M<N>` with checkbox tasks) and pass the matching `--prefix` /
   formatting to `_findings_to_milestones.py` instead of the `AUDIT`

@@ -34,12 +34,19 @@ column of the dimension registry in `SKILL.md`.
    - D5 → pgTAP, cross-tenant probes.
    - etc.
 
-6. **Emit per `templates/triage-and-summary.md`** (deep section):
+6. **Persist + verify** per the Findings pipeline in `SKILL.md`: append
+   each dimension's rows to `.code-audit/work/<date>/findings.tsv` as
+   you close it; run the refutation pass on every 🔴 before it reaches
+   the report.
+
+7. **Emit per `templates/triage-and-summary.md`** (deep section),
+   assembled from `findings.tsv`:
    - Per-dim status + findings list with severity.
    - For each 🔴: dedicated paragraph (what, why, where, fix).
    - For each 🟡: one-line in a table.
    - Suggested milestones via `scripts/_findings_to_milestones.py` if
-     >3 findings of any severity.
+     >3 findings of any severity (match the target devplan's ID
+     scheme via `--prefix`).
 
 ## What this cut does NOT do
 

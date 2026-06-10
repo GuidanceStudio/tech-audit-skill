@@ -12,6 +12,8 @@ For `cuts/deep.md` (one or more dimensions, on-demand).
 # Deep audit — <dimensions> — <YYYY-MM-DD>
 
 **Repo**: <name> · **Stack**: <detected> · **HEAD**: <git sha>
+**Findings source**: `.code-audit/work/<YYYY-MM-DD>/findings.tsv` ·
+all 🔴 survived the refutation pass
 
 ## D<N> — <title>
 

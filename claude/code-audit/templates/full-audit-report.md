@@ -8,8 +8,9 @@ Use this template for `cuts/full.md` output. Write to
 # Tech audit — <YYYY-MM-DD>
 
 **Auditor**: <name or "Claude code-audit skill under <user>'s direction">
-**Scope**: full 13-dim
+**Scope**: full (all dimensions)
 **Repo HEAD at audit time**: <git rev-parse HEAD>
+**Findings source**: `.code-audit/work/<YYYY-MM-DD>/findings.tsv` — all 🔴 survived the refutation pass
 **Previous audit**: <link to docs/internal/tech-audit-<previous-date>.md if any>
 
 ---

@@ -86,6 +86,34 @@ surfaces. **release-only** runs when a tag is being cut.
 defensible to defer) · 🟢 nice-to-have. Per dimension: ✅ no 🔴 and
 ≤2 🟡 · ⚠️ some 🟡 or a mitigated 🔴 · ❌ unmitigated 🔴.
 
+## Findings pipeline (deep / full / release)
+
+Long audits outlive a single context window. Persist as you go and
+verify before you emit.
+
+- **Incremental findings file.** Write findings to
+  `.code-audit/work/<YYYY-MM-DD>/findings.tsv` — one TSV row per
+  finding, the schema `scripts/_findings_to_milestones.py` consumes:
+  `severity⇥dim⇥location⇥title⇥fix⇥effort⇥confidence` (the 7th column
+  is M6; the script also accepts 6-column rows). Append **at the close
+  of each dimension**, not at the end — the audit survives compaction
+  and is resumable. Assemble the final report from this file, not from
+  memory. `quick` and `security` are short enough to stay inline.
+- **Resume.** On re-invocation, if today's `findings.tsv` exists, read
+  it, skip dimensions already represented, and continue.
+- **Refutation pass for every 🔴.** Before a 🔴 reaches the report,
+  re-read the actual code path and actively try to prove it wrong: is
+  the auth check applied by a parent middleware/scope? is the path
+  dead? is the "missing" validation done upstream? Refuted → drop it,
+  or downgrade with the reason recorded. Can't verify without runtime
+  or unavailable code → keep it but mark `confidence:
+  needs-verification`. This is the single biggest false-positive
+  reducer; it is not optional for 🔴.
+- **Milestone convention.** When emitting milestone stubs, match the
+  target devplan's existing ID scheme — pass the matching `--prefix`
+  to `scripts/_findings_to_milestones.py` (e.g. `--prefix M --start
+  <next>`), don't default to `AUDIT` blindly.
+
 ## Execution discipline (applies to every cut)
 
 - Send tool output to a file (`--format json -o ...`), then summarize

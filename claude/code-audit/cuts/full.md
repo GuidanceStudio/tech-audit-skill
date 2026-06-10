@@ -31,11 +31,14 @@
    coincides with a release tag.
 
 4. For each dimension, run all methods in `dimensions/D<N>-*.md`. Load
-   `threat-models/*.md` and `tools/*.md` as needed.
+   `threat-models/*.md` and `tools/*.md` as needed. **Append each
+   dimension's findings to `.code-audit/work/<date>/findings.tsv` as
+   you close it, and run the 🔴 refutation pass** — both per the
+   Findings pipeline in `SKILL.md`. Assemble the report from that file.
 
 5. **Project extensions**: if `.code-audit/extras/` exists in the
    repo, load every `*.md` from it AFTER the default dimensions. Use
-   them as additional dimensions (e.g. D14, D15) in the report.
+   them as additional dimensions (e.g. D15, D16) in the report.
 
 6. **Run the over-engineering deep-dive** if D1 surfaces ≥5 findings:
    write a companion file `docs/internal/over-engineering-audit-<date>.md`
