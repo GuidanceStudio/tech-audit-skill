@@ -132,13 +132,18 @@ dropped by the refutation step.
 
 ## M4 — Pipeline: multi-agent fan-out for deep/full
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — IDD (orchestration docs; crossref
+linter green 11/11). full.md § Execution replaces the hour-budget table
+with subagent fan-out (shared pre-scan computed once, one agent per
+dimension returning TSV + coverage note, model tiering, merge, per-🔴
+verifier, assemble) + sequential fallback + dedup rule + scope-not-clock
+stop. deep.md fans out for multi-dim requests, inline for one.
 
 Dimensions are near-independent; the `full` cut currently prescribes a
 sequential 5-7 h human-calibrated pass that a single context cannot
 hold.
 
-- [ ] **Fan-out orchestration in `cuts/full.md` and `cuts/deep.md`
+- [x] **Fan-out orchestration in `cuts/full.md` and `cuts/deep.md`
   (multi-dim case).** When the harness supports subagents (Agent /
   Workflow tools), spawn one agent per dimension; each loads ONLY its
   `dimensions/D<N>-*.md` + the detected `languages/*.md` + threat
@@ -146,24 +151,24 @@ hold.
   rows. Orchestrator merges into findings.tsv, deduplicates
   cross-dimension overlaps, runs the M3 refutation pass (independent
   verifier agents — one per 🔴), then assembles the report.
-- [ ] **Sequential fallback** stays documented for harnesses without
+- [x] **Sequential fallback** stays documented for harnesses without
   subagents (current cut text, trimmed).
-- [ ] **Replace hour budgets with operational units.** The per-dim
+- [x] **Replace hour budgets with operational units.** The per-dim
   time table in `cuts/full.md` ("D1: 1 h") is human-calibrated and
   meaningless to the model. Reframe as scope units: which methods are
   mandatory vs sample-N, max files to deep-read per method, when to
   stop ("stop after the method catalog is exhausted, not after N
   minutes").
-- [ ] **Dedup rule.** Same file+line surfaced by two dims → keep under
+- [x] **Dedup rule.** Same file+line surfaced by two dims → keep under
   the dim whose method is most specific, cross-reference the other.
-- [ ] **Shared pre-scan, computed once.** The orchestrator runs stack
+- [x] **Shared pre-scan, computed once.** The orchestrator runs stack
   detection, the git-churn heatmap, and the file inventory ONCE and
   passes them in each agent's prompt — dimension agents must not each
   re-discover the repo (token waste + inconsistent scoping).
-- [ ] **Model tiering.** Scan-tier dimensions (D6, D7, D9, D11, D12)
+- [x] **Model tiering.** Scan-tier dimensions (D6, D7, D9, D11, D12)
   may run on a smaller/cheaper model when the harness supports a model
   override; always-deep dims and 🔴 verifiers stay on the main model.
-- [ ] **Coverage honesty.** Each dimension agent reports what it
+- [x] **Coverage honesty.** Each dimension agent reports what it
   examined vs sampled-out (files deep-read, methods skipped and why);
   the report's scope section aggregates this — no silent truncation.
 

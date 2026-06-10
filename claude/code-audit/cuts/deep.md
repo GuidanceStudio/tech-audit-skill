@@ -37,7 +37,11 @@ column of the dimension registry in `SKILL.md`.
 6. **Persist + verify** per the Findings pipeline in `SKILL.md`: append
    each dimension's rows to `.code-audit/work/<date>/findings.tsv` as
    you close it; run the refutation pass on every 🔴 before it reaches
-   the report.
+   the report. **When more than one dimension is requested and the
+   harness has subagents, fan out** — one agent per dimension with the
+   shared pre-scan passed in, exactly as `cuts/full.md` § Execution
+   describes (this cut just runs fewer dimensions). A single dimension
+   runs inline.
 
 7. **Emit per `templates/triage-and-summary.md`** (deep section),
    assembled from `findings.tsv`:
