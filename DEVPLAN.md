@@ -457,7 +457,7 @@ emojis, dimension IDs, method shell snippets unchanged.
 returns only the agentskills.io-standard frontmatter and legitimate
 upstream-project citations; the content reads tool-neutral.
 
-### M12: Root multi-assistant installer
+### M12: Root multi-assistant installer ✅
 
 **Why:** One installer that places the payload correctly for whichever
 assistant the user runs, and prints the flat path for manual copy.
@@ -475,12 +475,12 @@ Keep `--force`, `--check` (per target), remote-clone mode, and the
 `--target <name>` / `all` non-interactive.
 
 **Tasks:**
-- [ ] Target selection: interactive menu + `--target claude|codex|opencode|gemini|agents|manual|all`
-- [ ] Per-target placement (verbatim copy / TOML emitter / AGENTS.md writer / print-path)
-- [ ] Gemini TOML wrapper generation from the router
-- [ ] `--check` works per target; `.installed-from` stamp retained
-- [ ] Tests: install + `--check` for claude/codex/opencode (verbatim), gemini (toml present), agents (pointer present)
-- [ ] README install section rewritten for the multi-assistant flow
+- [x] Target selection: interactive menu + `--target claude|codex|opencode|gemini|agents|manual|all`
+- [x] Per-target placement (verbatim copy / TOML emitter / AGENTS.md writer / print-path)
+- [x] Gemini TOML wrapper generation from the router
+- [x] `--check` works per target; `.installed-from` stamp retained
+- [x] Tests: install + `--check` for claude/codex/opencode (verbatim), gemini (toml present), agents (pointer present)
+- [x] README install section rewritten for the multi-assistant flow
 
 **Done when:** `install.sh --target <x>` installs correctly for each of
 claude/codex/opencode/gemini/agents, `--check` detects drift per target,

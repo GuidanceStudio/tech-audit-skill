@@ -29,21 +29,37 @@ This skill replaces all three with **methodical, severity-calibrated, context-aw
 
 ## Install
 
-### Local (clone + install)
+The installer is multi-assistant. Run it with no target for an
+interactive menu, or pass `--target`:
 
 ```sh
 git clone git@github.com:GuidanceStudio/code-repository-audit-skill.git
 cd code-repository-audit-skill
-./install.sh
+./install.sh                      # interactive menu
+./install.sh --target claude      # ~/.claude/skills/code-audit/
+./install.sh --target codex        # ~/.codex/skills/code-audit/
+./install.sh --target opencode     # ~/.config/opencode/skills/code-audit/
+./install.sh --target gemini        # ~/.gemini/commands/code-audit.toml (+ payload)
+./install.sh --target agents        # AGENTS.md pointer for Cursor/Windsurf/Copilot/Aider/Continue
+./install.sh --target all           # claude + codex + opencode
+./install.sh --target manual        # print the folder path; copy it yourself
 ```
 
-### Remote (one-liner)
+Remote one-liner (no clone needed):
 
 ```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh) --target claude
 ```
 
-The installer copies `code-audit/` to `~/.claude/skills/code-audit/`. Pass `--force` to overwrite an existing installation.
+`claude`, `codex`, and `opencode` get the `code-audit/` folder copied
+verbatim — it's the shared [agentskills.io](https://agentskills.io)
+`SKILL.md` standard, so one payload serves all three. `gemini` gets a
+generated TOML command (Gemini doesn't use SKILL.md); `agents` writes an
+[`AGENTS.md`](https://agents.md) pointer for the broad tier. Flags:
+`--force` (overwrite), `--check` (report drift vs source, per `--target`),
+`--agents-dir DIR` (where the `agents` pointer is written). Or skip the
+installer entirely — `code-audit/` is self-contained, copy it anywhere
+your tool reads skills.
 
 ## Use
 
