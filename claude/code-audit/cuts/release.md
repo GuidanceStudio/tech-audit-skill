@@ -41,9 +41,9 @@ what changed since the last tag.
    - On the whole repo: a scan-only pass over D6, D7, D8, D9, D11,
      D12, D13 — promote any to deep if a 🔴 surfaces.
 
-4. **Always-deep dimensions** (D1, D2, D3, D13) get a 5-min
-   focused scan even if not touched by the diff. They decay between
-   tags.
+4. **Always-deep dimensions** (the always-deep tag in the `SKILL.md`
+   registry: D1, D2, D3, D13, D14) get a 5-min focused scan even if not
+   touched by the diff. They decay between tags.
 
 5. **Release-only deep on D10** (performance & cost baseline): pull
    benchmark numbers and compare to the previous tag's recorded

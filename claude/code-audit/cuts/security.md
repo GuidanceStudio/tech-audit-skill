@@ -34,6 +34,8 @@ no depth on docs.
    - PII handling → `threat-models/pii-data-flow.md`.
    - Secret bootstrap → `threat-models/secret-management.md`.
    - Async / pooled DB → `threat-models/multi-tenant-isolation.md`.
+   - LLM / agent / MCP / tool-gateway surface → `threat-models/ai-runtime.md`
+     (default-load when detect-stack flags an agentic product).
 
 4. **Run automated tools** (read `tools/<tool>.md` for usage; emit the
    commands the user should run if you can't run them yourself):

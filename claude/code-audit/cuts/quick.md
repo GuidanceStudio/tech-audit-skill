@@ -29,7 +29,10 @@
    - Touched migrations → D9.
    - Touched bootstrap / Dockerfile / docker-compose → D13 + D6.
    - Touched UI / Filament / admin pages → D12.
-   - Always: D1 (code essentiality on the diff itself).
+   - Touched an LLM/agent/tool-gateway surface → D4 + `threat-models/ai-runtime.md`.
+   - **Always: D14 (correctness on the diff) + D1 (essentiality on the diff).**
+     Correctness is the primary reason a quick scan exists — run it on
+     every diff, not just when something looks risky.
 
 4. **Run methods only on the diff**, not the full codebase. The diff is the unit of review.
 

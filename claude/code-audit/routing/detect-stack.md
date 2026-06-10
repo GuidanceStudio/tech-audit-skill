@@ -49,6 +49,25 @@ sharpen the language file's relevance:
 | TS/JS | `vite.config.*` | Vite-driven SPA. |
 | TS/JS | nothing | Plain Node service. |
 
+For a framework the skill ships no `languages/*.md` for (Symfony,
+Django, Flask, Rails, Go, Rust, …): run the generic dimension methods,
+state in the report that no stack file exists for it, and point the
+user to `.code-audit/extras/language-<name>.md` to add one. Don't load
+a sibling framework's file and "note the differences" — that smuggles
+in wrong-stack assumptions.
+
+## Agentic-product sub-marker (cross-cutting)
+
+Independent of language, flag the product as embedding an AI runtime
+when any of these are present — it makes `threat-models/ai-runtime.md`
+a default load for D4:
+
+- MCP config (`mcp.json`, `*mcp*` server/client config)
+- agent SDK deps (`@anthropic-ai/*`, `openai`, `litellm`,
+  `langchain`, agent frameworks)
+- a model client pointed at OpenRouter / Anthropic / OpenAI
+- a chat-bridge service or a model-callable tool/function registry
+
 ## When no markers exist
 
 If detection returns empty (rare — usually the repo is at least one

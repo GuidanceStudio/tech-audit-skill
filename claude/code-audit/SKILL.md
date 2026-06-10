@@ -71,6 +71,9 @@ via `scripts/_findings_to_milestones.py`.
 | D11 | Legal / compliance | scan | GDPR, privacy, legal |
 | D12 | Admin surface | scan | admin UI, Filament, empty states |
 | D13 | Setup replicability | always-deep | setup, fresh clone, bootstrap |
+| D14 | Correctness & robustness | always-deep | bugs, correctness, races, idempotency, error paths |
+
+The 13-dimension framing in prose is historical; D14 was added in v0.2.
 
 **always-deep** dims decay invisibly between audits — they run deep in
 every cut that touches them. **default-deep** run deep when the

@@ -138,5 +138,8 @@ Unencrypted backup with PII inside → 🔴.
 - `threat-models/auth-model.md` — JWT verification deep-dive.
 - `threat-models/secret-management.md` — bootstrap + rotation patterns.
 - `threat-models/pii-data-flow.md` — PII corpus + masking pipeline.
+- `threat-models/ai-runtime.md` — **default-load when the product
+  embeds an LLM/agent surface** (detect-stack flags it): prompt
+  injection, confused-deputy via tool gateway, exfil channels.
 - `tools/{gitleaks,trivy,semgrep,hadolint}.md`.
 - `languages/<stack>.md` — framework-level auth gotchas.

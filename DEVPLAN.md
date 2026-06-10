@@ -169,11 +169,16 @@ covers all 13 dims.
 
 ## M5 — Content: correctness dimension + AI-runtime threat model
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — IDD (content; crossref linter guards
+reachability, green 11/11). Done-when verified: D14 + ai-runtime.md
+follow the dimension/threat-model file shape; registry lists D14
+always-deep so every cut that honors tags runs it; quick cut runs D14
+on every diff; detect-stack agentic sub-marker + D4/security loaders
+default-load ai-runtime.md.
 
 The two real content gaps.
 
-- [ ] **`dimensions/D14-correctness-robustness.md`.** The framework
+- [x] **`dimensions/D14-correctness-robustness.md`.** The framework
   audits essentiality, docs, tests, security… but no dimension
   catalogs functional-bug hunting: unhandled error paths, race
   conditions / TOCTOU, idempotency of retried operations, transaction
@@ -182,11 +187,11 @@ The two real content gaps.
   input validation at trust boundaries, timezone/encoding pitfalls.
   Method catalog with greppable patterns per stack + PoC/Production
   bars, same file shape as D1-D13.
-- [ ] **Wire D14 into cuts**: `quick` runs it ALWAYS on the diff
+- [x] **Wire D14 into cuts**: `quick` runs it ALWAYS on the diff
   (correctness is the #1 ask for a PR review — currently only D1
   essentiality is mandatory); `full` treats it as always-deep;
   `deep` topic map gets "bugs / correctness / robustness" → D14.
-- [ ] **`threat-models/ai-runtime.md`.** `llm-assisted-code.md` covers
+- [x] **`threat-models/ai-runtime.md`.** `llm-assisted-code.md` covers
   code *written by* LLMs; nothing covers LLMs *in the product*: prompt
   injection → unintended tool calls, confused-deputy through MCP/tool
   gateways, secrets/PII leaking into prompts or model logs, exfil via
@@ -194,7 +199,7 @@ The two real content gaps.
   gates on destructive tools, tenant context bleeding through shared
   agent runtimes. Referenced from D4 (security) and D5 (multi-tenant)
   when the product embeds an LLM/agent surface.
-- [ ] **Stack detection hook**: add an "agentic product" sub-marker
+- [x] **Stack detection hook**: add an "agentic product" sub-marker
   (MCP config files, agent SDK deps, LiteLLM/OpenRouter clients) in
   `routing/detect-stack.md` that flags the ai-runtime threat model as
   default-load for D4.
