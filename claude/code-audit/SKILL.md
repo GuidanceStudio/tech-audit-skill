@@ -124,6 +124,15 @@ verify before you emit.
   belongs in the final report only.
 - Cite `file:line`; paste code only when the hunk itself is the finding.
 
+## Workspace / multi-repo mode
+
+If the target directory holds multiple git checkouts (a sibling-repo
+workspace, e.g. a microservice or appliance monorepo of separate
+repos), enumerate them, confirm the scope with the user, run stack
+detection **per repo**, and produce per-repo findings plus one merged
+executive summary. A finding's `location` carries the repo prefix so
+the merged `findings.tsv` stays unambiguous.
+
 ## Per-project extension
 
 If the target repo has `.code-audit/extras/`, load every `*.md` in it

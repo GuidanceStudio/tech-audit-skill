@@ -105,6 +105,28 @@ When a user clicks a button they aren't permitted to use, what happens?
 
 Find permission gates without UI feedback → 🟡.
 
+### API ↔ admin-UI parity
+
+Every state-changing action the admin UI exposes should have an
+equivalent programmatic endpoint (a headless operator / CI / another
+service can't click buttons). Diff the admin mutations against the API
+surface:
+
+```sh
+# Admin-surface actions (Filament resources/pages, or admin routes)
+grep -rnE 'public function (create|edit|delete|update|store|destroy)' app/Filament/ \
+  2>/dev/null | head -40
+grep -rnE "Route::(post|put|patch|delete).*'/admin" routes/ 2>/dev/null | head
+
+# Public/programmatic API surface
+grep -rnE "Route::(post|put|patch|delete)" routes/api*.php 2>/dev/null | head -40
+```
+
+For each admin-doable mutation with no API equivalent → 🟡 (the fix is
+to add the `/api/v1` route, not to remove the UI). Read-only admin
+views are exempt. Generalize beyond Filament: any admin-only route
+whose verb mutates state, compared against the public API routes.
+
 ## PoC bar
 
 - Every widget querying data has an empty-state branch tested in pest / playwright.
@@ -121,3 +143,8 @@ Find permission gates without UI feedback → 🟡.
 
 - D2 — operator docs (the CLI walkthrough overlaps with this; coordinate so neither duplicates).
 - D6 — operational readiness (runbook for failure scenarios).
+- This dimension audits admin-surface **source** (empty-states, parity,
+  failure routing). Rendered UI/UX depth — visual design, WCAG
+  accessibility, responsive behavior on real screenshots — is the
+  `ui-review` skill's job, not this one. Point the user there for a
+  rendered-interface review.

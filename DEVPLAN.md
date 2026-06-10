@@ -218,36 +218,42 @@ an MCP-bearing repo auto-loads `ai-runtime.md`.
 
 ## M6 — Content: smaller upgrades
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — IDD + TDD for the script change
+(7-column confidence tests written red-then-green; suite 12/12).
+Done-when verified: templates/finding-phrasing.md documents the
+confidence axis + secret-redaction rule; D12 has the API↔UI parity
+method + ui-review cross-ref; SKILL.md documents workspace mode; D3
+flake check gated to release/full; unknown-stack fallback already
+landed in M5. install --check OK.
 
 Grouped low-effort improvements; each is one focused edit.
 
-- [ ] **Confidence axis on findings.** Add `confidence:
+- [x] **Confidence axis on findings.** Add `confidence:
   certain / probable / needs-verification` to the finding schema
   (templates + TSV format gains a 7th column; keep
   `_findings_to_milestones.py` backward-compatible with 6-column
   input). Severity says "how bad if true", confidence says "how sure".
   Pairs with the M3 refutation pass.
-- [ ] **API↔UI parity method in D12.** Mechanical check: diff the
+- [x] **API↔UI parity method in D12.** Mechanical check: diff the
   admin-surface actions (Filament resources/pages) against `/api/v1`
   routes; every admin-doable mutation without an API equivalent → 🟡.
   Generalize beyond Filament (admin routes vs public API routes).
-- [ ] **Workspace / multi-repo mode.** In SKILL.md routing: when the
+- [x] **Workspace / multi-repo mode.** In SKILL.md routing: when the
   target directory contains multiple git checkouts (sibling-repo
   workspace), enumerate them, confirm scope with the user, run stack
   detection per repo, and produce per-repo findings with one merged
   summary. One paragraph in SKILL.md + a note in `cuts/full.md`.
-- [ ] **Gate the expensive D3 flake check.** Running the full suite 3×
+- [x] **Gate the expensive D3 flake check.** Running the full suite 3×
   is costly; mark it opt-in (release/full cuts, or when the user
   reports flakiness), not part of the default deep pass.
-- [ ] **Honest unknown-stack fallback.** Replace "Django → load
+- [x] **Honest unknown-stack fallback.** Replace "Django → load
   python-fastapi.md and note ORM differences" style mappings with: run
   the generic dimension methods, state that no stack file exists for
   the framework, and point to `.code-review/extras/language-*.md`.
-- [ ] **Cross-reference the ui-review skill.** D12 currently stops at
+- [x] **Cross-reference the ui-review skill.** D12 currently stops at
   render/empty-state checks; add a pointer: rendered-UI/UX depth is
   `ui-review`'s job, not this skill's.
-- [ ] **Secret-redaction rule in `finding-phrasing.md`.** Findings
+- [x] **Secret-redaction rule in `finding-phrasing.md`.** Findings
   about leaked secrets (gitleaks hits, hardcoded tokens) must reference
   the location only — never quote the secret value into the report or
   the findings.tsv (reports get committed/shared).

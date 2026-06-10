@@ -77,3 +77,11 @@ def test_milestones_six_column_tsv_roundtrip() -> None:
     out = run_milestones(tsv, "--prefix", "SEC", "--start", "1")
     assert "## SEC-1 — SQL injection" in out
     assert "Add a regression test" in out
+    assert "confidence" not in out  # no 7th column → no confidence noise
+
+
+def test_milestones_seven_column_tsv_with_confidence() -> None:
+    tsv = "🔴\tD4\tapp/a.php\tSQL injection\tparametrize\t1h\tneeds-verification\n"
+    out = run_milestones(tsv, "--prefix", "SEC", "--start", "1")
+    assert "## SEC-1 — SQL injection" in out
+    assert "confidence: needs-verification" in out

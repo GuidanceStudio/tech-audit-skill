@@ -56,6 +56,31 @@ Optional fourth part for 🔴 only:
 
 ---
 
+## Severity vs confidence — two different axes
+
+**Severity** (🔴🟡🟢) says *how bad if true*. **Confidence** says *how
+sure you are it's true* — `certain` / `probable` / `needs-verification`.
+They're independent: a 🔴 you couldn't fully verify (needed runtime,
+couldn't read the called code) is still a 🔴, but tagged
+`needs-verification` so triage knows to confirm before acting. The
+refutation pass (see `SKILL.md` § Findings pipeline) sets this: a 🔴
+that survives refutation is `certain` or `probable`; one that couldn't
+be checked is `needs-verification`. Confidence is the optional 7th TSV
+column and surfaces in the milestone stub's Source line.
+
+Never inflate confidence to sound authoritative — `needs-verification`
+honestly stated is more useful than a false `certain`.
+
+## Never quote a secret value
+
+Findings about leaked secrets (gitleaks hits, hardcoded tokens, keys in
+config) reference the **location only** — `path:line` and the variable
+name. Never paste the secret value into the report or `findings.tsv`:
+audit reports get committed, shared, and screenshotted. "AWS key
+hardcoded at `config/services.php:12`" — not the key itself.
+
+---
+
 ## Specific calibrations
 
 ### When the code is correct but the test is missing

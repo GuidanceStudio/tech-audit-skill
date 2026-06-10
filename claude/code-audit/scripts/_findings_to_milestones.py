@@ -33,6 +33,7 @@ class Finding:
     title: str
     fix: str
     effort: str
+    confidence: str = ""  # certain | probable | needs-verification (optional 7th col)
 
 
 def parse_tsv(stream) -> list[Finding]:
@@ -42,7 +43,7 @@ def parse_tsv(stream) -> list[Finding]:
         if not line or line.startswith("#"):
             continue
         parts = line.split("\t")
-        if len(parts) != 6:
+        if len(parts) not in (6, 7):  # confidence column is optional
             print(f"skip (wrong field count): {line[:80]}", file=sys.stderr)
             continue
         out.append(Finding(*parts))
@@ -97,9 +98,10 @@ def render_milestone_stubs(findings: list[Finding], milestone_map: dict[tuple[st
 
     for i, f in enumerate(reds):
         mid = milestone_map.get(finding_key(f), f"AUDIT-{i + 1}")
+        conf = f", confidence: {f.confidence}" if f.confidence else ""
         out.append(
             f"## {mid} — {f.title}\n\n"
-            f"**Source**: audit finding {f.severity} @ `{f.location}` (dim {f.dim}).\n\n"
+            f"**Source**: audit finding {f.severity} @ `{f.location}` (dim {f.dim}{conf}).\n\n"
             f"**Why**: <one paragraph explaining the impact in plain language>\n\n"
             f"**Scope**:\n"
             f"- [ ] {f.fix}\n"

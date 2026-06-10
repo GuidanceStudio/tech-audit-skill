@@ -105,7 +105,10 @@ Example for PII detection: `tests/fixtures/pii_corpus.yaml` with codici fiscali,
 
 Missing corpus when the product promise demands one → 🟡.
 
-### Flake rate
+### Flake rate (opt-in — expensive)
+
+Running the full suite 3× is costly; do it only in `release` / `full`
+cuts, or when the user reports flakiness — not on every deep pass.
 
 Re-run the test suite 3× back-to-back. Any test that fails 1/3 → 🔴 (it's lying about reality every third run, which means it'll surprise the team eventually).
 
