@@ -310,22 +310,28 @@ home; `examples/` gone or referenced; the discipline block exists.
 
 ## M8 — Repeat-audit memory: accepted-findings baseline + deltas
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — IDD (process docs; crossref linter
+green 12/12). SKILL.md § Repeat-audit memory defines
+.code-audit/accepted.tsv (suppression baseline with revisit-by) and
+mechanical findings.tsv deltas; false-positives.md gains the
+audit-level acceptance flow that writes the baseline; full cut trend is
+now generated from the diff (replacing read-the-old-report), release
+cut filters the ship-block list through the baseline.
 
 Today every audit re-surfaces the same accepted 🟡s, and trend
 tracking means "re-read the previous report and eyeball it". Make
 repeat audits incremental — solidity AND token savings.
 
-- [ ] **`.code-audit/accepted.tsv`** in the target repo: one row per
+- [x] **`.code-audit/accepted.tsv`** in the target repo: one row per
   dismissed/accepted finding (stable key = dim + location + title
   slug, severity, reason, date, optional revisit-by). Every cut
   filters its findings against it before reporting; the report shows
   "suppressed: N accepted findings" with expired `revisit-by` entries
   resurfacing automatically.
-- [ ] **Wire `playbooks/false-positives.md` to it.** The dismissal
+- [x] **Wire `playbooks/false-positives.md` to it.** The dismissal
   flow ends with appending a row to accepted.tsv, not just a verbal
   dismissal that evaporates.
-- [ ] **Mechanical deltas.** `full` and `release` cuts diff the
+- [x] **Mechanical deltas.** `full` and `release` cuts diff the
   current findings.tsv against the most recent prior
   `.code-audit/work/<date>/findings.tsv`: new / fixed / still-open per
   severity. The report's trend section is generated from that diff,

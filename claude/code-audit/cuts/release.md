@@ -17,6 +17,11 @@ what changed since the last tag.
 
 ## Procedure
 
+0. **Load the accepted-findings baseline** (`.code-audit/accepted.tsv`,
+   per `SKILL.md` § Repeat-audit memory) and filter suppressed findings
+   out of the ship-block decision; report `suppressed: N`. Past their
+   `revisit-by` date, accepted findings resurface.
+
 1. **Compute the diff since the last tag**:
 
    ```sh

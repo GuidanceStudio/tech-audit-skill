@@ -15,12 +15,14 @@
 
 ## Procedure
 
-1. **Read the previous audit** if one exists in
-   `docs/internal/tech-audit-*.md`. Note which 🔴 / 🟡 from last
-   time:
-   - Closed (fix shipped) → trend up.
-   - Still open → trend flat / down.
-   - New regressions → trend down.
+1. **Compute the trend mechanically** (per `SKILL.md` § Repeat-audit
+   memory): diff this run's `findings.tsv` against the most recent
+   prior `.code-audit/work/<date>/findings.tsv` — fixed (gone),
+   still-open (present in both), new (this run only), per severity.
+   The trend section is generated from that diff, not from re-reading
+   the previous prose report. Load the accepted-findings baseline
+   (`.code-audit/accepted.tsv`) and filter suppressed findings out
+   before reporting.
 
 2. **Detect the stack** (per `SKILL.md` § Step 2). Load every
    matching `languages/<stack>.md`.

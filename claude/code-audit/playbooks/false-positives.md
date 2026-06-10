@@ -2,6 +2,33 @@
 
 Tools generate noise. Triaging dismisses honestly without rubber-stamping. Heuristics + escalation pattern.
 
+This file covers two kinds of dismissal: **tool-generated** false
+positives (suppress at the tool's config, below) and **audit-level**
+findings the team consciously accepts (record in the repeat-audit
+baseline, next section) so the next audit doesn't re-surface them.
+
+## Accepting an audit finding (the baseline)
+
+When you (or the user) decide an audit finding is a false positive or
+an accepted risk, don't just say so in chat — it evaporates and the
+next audit raises it again. Append a row to `.code-audit/accepted.tsv`
+in the target repo:
+
+```
+dim␟location␟title-slug⇥severity⇥reason⇥date⇥revisit-by
+```
+
+- **key** (`dim␟location␟title-slug`) is what each cut matches fresh
+  findings against to suppress them.
+- **reason** is mandatory — "accepted: legacy module, rewrite tracked
+  in M52" / "false positive: scope applied by parent middleware".
+- **revisit-by** is optional; past that date the finding resurfaces
+  automatically (use it for "accept until the next release").
+
+A cut reports `suppressed: N accepted findings` so the suppression is
+visible, never silent. This is the audit-level analogue of the
+tool-config suppressions below.
+
 ## The decision tree
 
 For every tool-generated finding:

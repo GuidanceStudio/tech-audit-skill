@@ -114,6 +114,25 @@ verify before you emit.
   to `scripts/_findings_to_milestones.py` (e.g. `--prefix M --start
   <next>`), don't default to `AUDIT` blindly.
 
+### Repeat-audit memory
+
+So a re-audit doesn't re-litigate what was already decided, and the
+trend is mechanical rather than eyeballed:
+
+- **Accepted-findings baseline** — `.code-audit/accepted.tsv` in the
+  target repo: one row per dismissed/accepted finding, key =
+  `dim␟location␟title-slug`, plus severity, reason, date, optional
+  `revisit-by`. Every cut filters its fresh findings against it before
+  reporting, and shows a `suppressed: N accepted findings` line.
+  Entries past their `revisit-by` date resurface automatically. The
+  dismissal flow that writes here lives in
+  `playbooks/false-positives.md`.
+- **Mechanical deltas** — `full` and `release` cuts diff the current
+  `findings.tsv` against the most recent prior
+  `.code-audit/work/<date>/findings.tsv`: new / fixed / still-open per
+  severity. The report's trend section is generated from that diff,
+  not from re-reading the previous prose report.
+
 ## Execution discipline (applies to every cut)
 
 - Send tool output to a file (`--format json -o ...`), then summarize
