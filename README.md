@@ -168,7 +168,6 @@ code-repository-audit-skill/
         │             ci-pre-commit.yaml}
         ├── playbooks/{operations,false-positives}.md
         ├── extensions/README.md
-        ├── examples/{full-audit-multitenant-saas,security-pass-fastapi}.md
         └── scripts/{_detect_stack,_bootstrap_tooling,
                     _doctor_fresh_clone,_findings_to_milestones}.py
 ```
@@ -200,6 +199,28 @@ See [`claude/code-audit/playbooks/operations.md`](claude/code-audit/playbooks/op
 Open an issue or PR against [GuidanceStudio/code-repository-audit-skill](https://github.com/GuidanceStudio/code-repository-audit-skill).
 
 A finding that recurs across projects might warrant a default dimension or threat-model — propose it. A stack-specific gotcha that isn't in `languages/` — add it. Keep additions in the same style: short, concrete, cross-referenced.
+
+## What this skill does NOT do
+
+- It doesn't replace your test runner — it tells you what to test.
+- It doesn't auto-fix — it produces findings + suggested milestones.
+- It doesn't run paid SaaS (Snyk, FOSSA) — it points at OSS
+  equivalents (Trivy, Semgrep) and explains why.
+- It doesn't drive SOC2 / ISO27001 programs — it covers the ASVS-L1
+  baseline that gets you to a real conversation.
+
+## Worked examples
+
+Two complete example reports live in [`docs/examples/`](docs/examples/)
+(not shipped with the installed skill).
+
+## Maintaining the skill
+
+The skill follows the rules it audits: small modular files, each fact
+in exactly one place (the dimension registry lives only in `SKILL.md`),
+no dead content — `tests/test_crossrefs.py` enforces the last two
+mechanically. Updating the skill should be a 5-minute edit, not a hunt
+across near-duplicates.
 
 ## License
 

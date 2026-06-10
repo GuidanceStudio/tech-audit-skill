@@ -58,19 +58,11 @@ no depth on docs.
 - It does NOT block a release on 🟡 alone. Release-block recommendation
   only for 🔴.
 
-## Tooling order (cheap → expensive)
+## Tooling order
 
-When running tools, follow this order — cheap signals first so the
-operator sees something fast:
-
-1. `gitleaks` (seconds).
-2. `composer audit` / `npm audit` / `pip-audit` (seconds).
-3. `trivy fs .` (~minute on first run).
-4. `semgrep` with the right rule packs (a few minutes).
-5. Stack-specific deep SAST (phpstan/psalm/mypy, several minutes).
-
-If a fast tool surfaces 🔴, surface that finding immediately — don't
-make the operator wait for the slow tools.
+Run tools cheap-first per `tools/_matrix.md` § Wiring order. If a fast
+tool surfaces 🔴, surface that finding immediately — don't make the
+operator wait for the slow tools.
 
 ## Cross-references
 

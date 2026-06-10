@@ -25,11 +25,10 @@
 2. **Detect the stack** (per `SKILL.md` § Step 2). Load every
    matching `languages/<stack>.md`.
 
-3. **Run every dimension**:
-   - **Deep**: D1, D2, D3, D4, D5, D8, D13.
-   - **Scan**: D6, D7, D9, D11, D12.
-   - **Release-only**: D10 (skip unless this audit coincides with a
-     release tag).
+3. **Run every dimension**, treatment per the registry tags in
+   `SKILL.md`: always-deep + default-deep → deep; scan → scan
+   (promote to deep on a 🔴); release-only → skip unless this audit
+   coincides with a release tag.
 
 4. For each dimension, run all methods in `dimensions/D<N>-*.md`. Load
    `threat-models/*.md` and `tools/*.md` as needed.

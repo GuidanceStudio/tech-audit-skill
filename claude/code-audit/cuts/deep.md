@@ -12,22 +12,8 @@
 - Repo root.
 - One or more dimension shortcodes (D1..D13) or names.
 
-If the user names a topic but not a dim, map it:
-| Topic | Dim |
-|---|---|
-| "code quality / readability / dead code" | D1 |
-| "docs / documentation / arch drift" | D2 |
-| "tests / coverage / regression" | D3 |
-| "security / vuln / OWASP" | D4 |
-| "tenant / isolation / RLS / cross-tenant" | D5 |
-| "ops / healthcheck / runbook / backup" | D6 |
-| "deps / dependencies / licenses / CVE" | D7 |
-| "CI / build / linter / pre-commit" | D8 |
-| "schema / migrations / audit log" | D9 |
-| "perf / latency / cost" | D10 |
-| "GDPR / privacy / legal / compliance" | D11 |
-| "admin UI / Filament / empty states" | D12 |
-| "setup / fresh clone / bootstrap" | D13 |
+If the user names a topic but not a dim, map it via the **Topics**
+column of the dimension registry in `SKILL.md`.
 
 ## Procedure
 

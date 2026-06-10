@@ -243,33 +243,39 @@ parity method; SKILL.md documents workspace mode and the fallback.
 
 ## M7 — Token & maintenance efficiency pass
 
-Status: **TODO**
+Status: **DONE** (2026-06-10) — IDD (content restructuring; guard =
+crossref/reachability tests, green 11/11). SKILL.md now 103 lines (98
+body + frontmatter) hosting the single-source dimension registry with
+Topics column; deep-cut topic map, full-cut treatment lists and
+operations cadence groups all reference registry tags. Tool-order and
+paid-skip facts live only in tools/_matrix.md. examples/ moved out of
+the shipped skill to docs/examples/. Execution-discipline block added.
 
 The skill ships ~4.9k lines across 46 files; lazy-loading is the right
 architecture but the loaded surface and the duplication can both
 shrink. Run BEFORE M5 (new content lands on the deduped structure).
 
-- [ ] **Slim SKILL.md (the always-loaded file).** Keep only what
+- [x] **Slim SKILL.md (the always-loaded file).** Keep only what
   routing needs: cut table, stack table, dimension registry, severity
   scheme, extension hook. Move "What this skill does NOT do",
   provenance, and the cadence/onboarding pointers to README.md.
   Target ≤100 lines.
-- [ ] **Single-source dimension registry.** The dim list (id, title,
+- [x] **Single-source dimension registry.** The dim list (id, title,
   tag, topic keywords) currently repeats across SKILL.md, `cuts/full`,
   `cuts/deep` (topic map), `playbooks/operations.md` (cadence groups)
   — adding one dimension touches ~6 files. Canonical registry lives in
   the SKILL.md table only (add a topic-keywords column absorbing the
   deep-cut map); cuts and playbooks reference *tags* (always-deep,
   scan, …) instead of re-listing IDs.
-- [ ] **Dedup repeated facts.** One home each, cross-referenced
+- [x] **Dedup repeated facts.** One home each, cross-referenced
   elsewhere: tool execution order (now in both `cuts/security.md` and
   `tools/_matrix.md`), what-to-skip list (now in both
   `playbooks/operations.md` §3 and `tools/_matrix.md`).
-- [ ] **One home for examples.** Templates already embed full inline
+- [x] **One home for examples.** Templates already embed full inline
   examples; the separate `examples/` dir duplicates the pattern and is
   referenced by no cut. Drop `examples/` (or fold anything unique into
   the templates).
-- [ ] **Execution-time token discipline** — a short (~10 line) block
+- [x] **Execution-time token discipline** — a short (~10 line) block
   in SKILL.md, applying to every cut:
   - Tool output goes to a file (`--format json -o`), then summarize
     counts + top findings; never dump raw scanner output into context.

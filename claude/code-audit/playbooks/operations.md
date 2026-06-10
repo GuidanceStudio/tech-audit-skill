@@ -15,13 +15,12 @@ Calibrated for a 1–3 engineer shop at PoC → BETA with paying customers. SOC2
 | **Quarterly** (half-day) | `cuts/full.md` + restore-from-backup drill + dep major-version sweep + sub-processor list refresh | Every 3 months | 5-7 h |
 | **Triggered** (out-of-cycle) | Targeted dims | New channel/integration; new tenant tier; post-incident; secret-store change | Variable |
 
-**Always-deep** dimensions (D1, D2, D3, D13) run at every release-tag pass. They decay invisibly between audits.
-
-**Default-deep** dimensions (D4, D5, D8) run at every release-tag pass for products with multi-tenant or external-integration surface.
-
-**Scan-only** dimensions (D6, D7, D9, D11, D12) run quarterly OR when an incident promotes them.
-
-**Release-only deep** (D10) runs only when a release tag is being cut.
+Treatment per tier follows the registry tags in `SKILL.md`:
+**always-deep** runs at every release-tag pass (those dims decay
+invisibly between audits); **default-deep** runs at every release-tag
+pass when the product has the matching surface; **scan** runs
+quarterly or when an incident promotes it; **release-only** runs only
+when a tag is being cut.
 
 ---
 
@@ -66,11 +65,10 @@ For a 1-3 engineer shop pre-first-enterprise-deal, these audit practices look re
 
 6. **Custom ADR system or formal CHANGELOG ceremony.** The devplan + git log already function as the decision log. Adding a parallel system doubles maintenance for zero new info.
 
-7. **Snyk / SonarCloud paid tier.** Trivy + Semgrep + native `composer / npm / pip audit` cover ~90% for €0.
+7. **STRIDE / formal threat-model documents per feature.** Nobody reads them. Replace with a 5-line "what changed in trust boundaries?" note at release-tag time.
 
-8. **STRIDE / formal threat-model documents per feature.** Nobody reads them. Replace with a 5-line "what changed in trust boundaries?" note at release-tag time.
-
-9. **License-compliance scanners (FOSSA, Black Duck).** Useful at enterprise sale; premature now. `composer licenses` + `pip-licenses` ad-hoc is enough.
+(Paid-tool skips — Snyk, SonarCloud, FOSSA, Black Duck — live in
+`tools/_matrix.md` § What to skip; one home, not two.)
 
 ---
 
