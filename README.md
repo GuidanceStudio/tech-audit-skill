@@ -47,15 +47,19 @@ The installer copies `code-audit/` to `~/.claude/skills/code-audit/`. Pass `--fo
 
 ## Use
 
-In Claude Code, invoke any of:
+Invoke the skill however your assistant invokes skills, then describe
+what you want:
 
-```
-/code-audit
-"review this PR"
-"audit my codebase"
-"security review"
-"is this ready to ship?"
-```
+| Assistant | How to invoke |
+|---|---|
+| Claude Code | `/code-audit`, or just ask ("audit my codebase") |
+| Codex CLI | `/code-audit` (same SKILL.md standard), or ask |
+| opencode | `/code-audit`, or ask |
+| Gemini CLI | `/code-audit` (installed as a TOML command) |
+| Cursor / Windsurf / Copilot / Aider | reference the skill from `AGENTS.md`, then ask |
+
+Typical phrasings: `"audit my codebase"`, `"security review"`,
+`"is this ready to ship?"`, `"deep audit on D5"`.
 
 The skill picks the right **cut** based on your phrasing, or asks if it's ambiguous:
 

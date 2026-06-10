@@ -62,7 +62,7 @@
 A full audit can't fit one context window. Dimensions are nearly
 independent, so parallelize:
 
-**If the harness has subagents (Agent / Workflow tools) — preferred:**
+**If your assistant can run parallel subagents — preferred:**
 
 1. **Shared pre-scan, computed ONCE by the orchestrator** and passed
    into every agent's prompt: stack detection
@@ -75,7 +75,7 @@ independent, so parallelize:
    `languages/*.md` + the threat-models its methods reference. Each
    returns findings as TSV rows (the `findings.tsv` schema) plus a
    coverage note: files deep-read, methods run vs sampled-out and why.
-3. **Model tiering** (when the harness allows a per-agent model):
+3. **Model tiering** (when your assistant allows a per-agent model):
    scan-tier dims (D6, D7, D9, D11, D12) may run on a cheaper model;
    always-deep / default-deep dims and the 🔴 verifiers stay on the
    main model.

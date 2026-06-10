@@ -6,17 +6,21 @@ description: Methodical codebase audit across a 13-dimension tech-DD framework. 
 # Code audit — Router
 
 Honest, actionable findings on a codebase: methodical questions across
-13 dimensions, calibrated severity per finding, triageable output.
+a multi-dimension framework (see the registry below), calibrated
+severity per finding, triageable output. Assistant-neutral — works
+wherever this skill folder is loaded.
 
 ## When to invoke
 
 - "audit my code/project/codebase", "tech audit", "tech DD"
 - "security review", "security audit", "vuln scan"
 - "is this ready to ship?", "release check", "pre-release"
-- explicit `/code-audit`
+- an explicit invocation of this skill (a `/code-audit` slash command,
+  an `@code-audit` mention, or however your assistant invokes skills)
 
-Routine "review this PR/file" belongs to the builtin code-review
-skill. The `quick` cut exists for explicit narrow scans only.
+Routine "review this PR/file" is better served by a lightweight diff-
+review tool if your assistant ships one. The `quick` cut here exists
+for explicit narrow scans.
 
 ## Step 1 — pick the cut
 

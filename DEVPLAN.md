@@ -429,7 +429,7 @@ the payload. Tests stay green throughout.
 folder, the suite is green, and a bare `cp -r code-audit ~/somewhere`
 yields a self-contained skill.
 
-### M11: De-Claudize the content
+### M11: De-Claudize the content ✅
 
 **Why:** The payload should read as assistant-neutral so Codex/opencode/
 Gemini users aren't told to press Claude-specific buttons. The
@@ -447,11 +447,11 @@ section to README mapping invocation per assistant. Keep severity
 emojis, dimension IDs, method shell snippets unchanged.
 
 **Tasks:**
-- [ ] Genericize `cuts/full.md` fan-out wording (subagents, model tiering)
-- [ ] Sweep templates + SKILL.md for "Claude"/tool-name strings; neutralize
-- [ ] Phrase invocation assistant-agnostically in SKILL.md
-- [ ] README "Using this skill" per-assistant invocation note
-- [ ] crossref linter green (no broken refs introduced)
+- [x] Genericize `cuts/full.md` fan-out wording (subagents, model tiering)
+- [x] Sweep templates + SKILL.md for "Claude"/tool-name strings; neutralize
+- [x] Phrase invocation assistant-agnostically in SKILL.md
+- [x] README "Using this skill" per-assistant invocation note
+- [x] crossref linter green (no broken refs introduced)
 
 **Done when:** `grep -ri 'claude\|AskUserQuestion\|Workflow tool' code-audit/`
 returns only the agentskills.io-standard frontmatter and legitimate
