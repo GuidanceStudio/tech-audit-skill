@@ -28,9 +28,14 @@ This skill replaces all three with **methodical, severity-calibrated, context-aw
 
 …and adds dimensions and patterns that AI-assisted-code workflows specifically need: setup replicability, LLM-clone density, regression-after-fix discipline, async-pool tenant-context leaks.
 
-Ponytail's decision model is integrated as review guidance. The
-Ponytail plugin is not required. This project does not install its
-lifecycle hooks, persistent modes, or duplicate review/audit skills.
+### Ponytail integration boundary
+
+**Concepts imported:** the ordered D1 essentiality ladder and its
+finding taxonomy. **Runtime dependency:** none; the Ponytail plugin is
+not required. This project does not install its lifecycle hooks,
+persistent modes, or duplicate review/audit skills. Code-audit remains
+authoritative for routing, severity, safety boundaries, findings, and
+devplan hand-off.
 
 ## Install
 

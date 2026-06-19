@@ -626,7 +626,7 @@ suite is green (20 tests). Done-when was verified by the D1 ladder,
 quick/full routing references, boundary assertions, and README
 attribution. Ruff was not available locally; M15 does not require it.
 
-## M16: Lock the integration contract with content tests
+## M16: Lock the integration contract with content tests ✅
 
 **Why:** The value of the integration is the boundary between
 "smallest correct implementation" and indiscriminate deletion. Without
@@ -644,13 +644,20 @@ D1 title such as `delete: unused adapter` survives
 devplan without creating a runtime dependency between the repositories.
 
 **Tasks:**
-- [ ] Extend `tests/test_essentiality_contract.py` with registry and no-duplicate-skill assertions
-- [ ] Extend `tests/test_scripts.py` with a D1 prefixed-title round-trip through `_findings_to_milestones.py`
-- [ ] Keep the taxonomy single-sourced in D1 and reference it from cuts/templates rather than duplicating its definitions
-- [ ] Update `README.md` with the integration boundary: concepts imported, plugin not required
-- [ ] Test: run ruff and the complete pytest suite
-- [ ] Commit & push
+- [x] Extend `tests/test_essentiality_contract.py` with registry and no-duplicate-skill assertions
+- [x] Extend `tests/test_scripts.py` with a D1 prefixed-title round-trip through `_findings_to_milestones.py`
+- [x] Keep the taxonomy single-sourced in D1 and reference it from cuts/templates rather than duplicating its definitions
+- [x] Update `README.md` with the integration boundary: concepts imported, plugin not required
+- [x] Test: run ruff and the complete pytest suite
+- [x] Commit & push
 
 **Done when:** CI fails if D1 loses a prefix, its mandatory routing, its
 safety boundaries, its attribution, or the devplan round-trip; the
 repository still exposes only the `code-audit` skill.
+
+**Notes:** Executed in TDD mode. The expanded suite was red on the
+missing explicit README integration boundary, then green after the
+documentation change. Verification: 24 pytest tests pass, `uvx ruff
+check code-audit/scripts/ tests/` passes, the prefixed D1 title
+round-trips unchanged, and the contract rejects duplicate Ponytail
+skill frontmatter.

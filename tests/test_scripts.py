@@ -85,3 +85,13 @@ def test_milestones_seven_column_tsv_with_confidence() -> None:
     out = run_milestones(tsv, "--prefix", "SEC", "--start", "1")
     assert "## SEC-1 — SQL injection" in out
     assert "confidence: needs-verification" in out
+
+
+def test_d1_prefixed_title_survives_milestone_roundtrip() -> None:
+    tsv = (
+        "🔴\tD1\tapp/adapter.py\tdelete: unused adapter\t"
+        "remove the adapter\t30m\tcertain\n"
+    )
+    out = run_milestones(tsv, "--prefix", "M", "--start", "17")
+    assert "## M-17 — delete: unused adapter" in out
+    assert "| **M-17**: delete: unused adapter |" in out

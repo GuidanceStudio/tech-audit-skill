@@ -12,6 +12,7 @@ PHRASING = SKILL / "templates" / "finding-phrasing.md"
 QUICK = SKILL / "cuts" / "quick.md"
 FULL = SKILL / "cuts" / "full.md"
 README = REPO / "README.md"
+ROUTER = SKILL / "SKILL.md"
 
 PREFIXES = ("delete:", "stdlib:", "native:", "yagni:", "shrink:")
 
@@ -45,7 +46,36 @@ def test_minimalism_has_non_negotiable_boundaries() -> None:
 
 
 def test_readme_attributes_ponytail_without_requiring_the_plugin() -> None:
-    readme = README.read_text()
+    readme = " ".join(README.read_text().split())
     assert "DietrichGebert/ponytail" in readme
     assert "MIT" in readme
     assert "plugin is not required" in readme
+
+
+def test_d1_remains_mandatory_in_registry_and_quick_review() -> None:
+    router = ROUTER.read_text()
+    quick = QUICK.read_text()
+
+    assert "| D1 | Code essentiality | always-deep |" in router
+    assert "Always: D14" in quick
+    assert "D1 (essentiality on the diff)" in quick
+
+
+def test_repository_does_not_expose_duplicate_ponytail_skills() -> None:
+    skill_frontmatters = [
+        path.read_text().split("---", 2)[1]
+        for path in REPO.rglob("SKILL.md")
+        if path.read_text().startswith("---")
+    ]
+    assert not any(
+        "name: ponytail-review" in frontmatter
+        or "name: ponytail-audit" in frontmatter
+        for frontmatter in skill_frontmatters
+    )
+
+
+def test_readme_has_an_explicit_integration_boundary() -> None:
+    readme = README.read_text()
+    assert "### Ponytail integration boundary" in readme
+    assert "Concepts imported" in readme
+    assert "Runtime dependency" in readme
