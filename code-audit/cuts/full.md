@@ -47,7 +47,9 @@ The complete multi-dimension tech-DD report.
 6. **Run the over-engineering deep-dive** if D1 surfaces ≥5 findings:
    write a companion file `docs/internal/over-engineering-audit-<date>.md`
    detailing each dead class, single-impl interface, and orphan
-   migration. The main report cross-references it.
+   migration. Rank the companion report by the D1 essentiality taxonomy
+   in `dimensions/D01-code-essentiality.md`, biggest safe deletion
+   first. The main report cross-references it.
 
 7. **Emit per `templates/full-audit-report.md`**:
    - Header (auditor, scope, repo HEAD).

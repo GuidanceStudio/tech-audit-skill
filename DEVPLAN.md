@@ -565,3 +565,92 @@ and the registry/report status table covers all 16 dimensions.
   (Cline `.clinerules`, Continue blocks) — covered by AGENTS.md or
   skipped until asked.
 - A `uninstall` command; auto-update; telemetry.
+
+---
+
+# Follow-up — Ponytail essentiality integration
+
+Integrate the useful part of
+[`DietrichGebert/ponytail`](https://github.com/DietrichGebert/ponytail)
+into the existing D1 review path without installing or vendoring its
+plugin, lifecycle hooks, persistent modes, or duplicate review/audit
+skills. Ponytail is conceptual prior art under the MIT license; this
+repository remains the single source of truth for audit routing,
+severity, findings, and devplan hand-off.
+
+Recommended order: M15 → M16. These milestones are independent of the
+completed v0.3 packaging and UI work.
+
+## M15: Add the Ponytail essentiality ladder to D1 ✅
+
+**Why:** D1 already owns dead code, over-abstraction, duplication, and
+repository hygiene, but it does not give reviewers a compact,
+deterministic order for finding the smallest correct replacement.
+Installing Ponytail separately would duplicate `quick`/`full` review
+routing and introduce always-on behavior outside code-audit's scope.
+
+**Approach:** Extend `code-audit/dimensions/D01-code-essentiality.md`
+with an essentiality ladder adapted from Ponytail: delete an unneeded
+requirement or branch; prefer the standard library; prefer a native
+platform feature; reuse an already-installed dependency; then shrink
+the custom implementation. D1 findings use the compact title prefixes
+`delete:`, `stdlib:`, `native:`, `yagni:`, and `shrink:` inside the
+existing finding-title field, so the TSV schema and milestone bridge
+remain compatible. Wire the taxonomy into the quick-scan phrasing and
+the full-audit over-engineering companion report. State the ownership
+boundary explicitly: D1 may remove incidental complexity, but it may
+not weaken correctness, required tests, trust-boundary validation,
+security, accessibility, data-loss handling, or an explicit user
+requirement. Add Ponytail to README prior-art attribution with its MIT
+license; do not copy its hooks or persistent-mode machinery.
+
+**Tasks:**
+- [x] Add the ordered essentiality ladder and five finding prefixes to `code-audit/dimensions/D01-code-essentiality.md`
+- [x] Add D1-specific prefix guidance and concrete replacement wording to `code-audit/templates/finding-phrasing.md`
+- [x] Update `code-audit/cuts/quick.md` and `code-audit/cuts/full.md` so D1 output uses the taxonomy consistently on diffs and repo-wide audits
+- [x] Document the non-negotiable correctness, test, security, accessibility, and explicit-requirement boundaries
+- [x] Add Ponytail to `README.md` prior art with repository link and MIT attribution
+- [x] Test: add the initial D1 essentiality contract before changing the skill content
+- [x] Test: run the existing cross-reference and full pytest suite
+- [x] Commit & push
+
+**Done when:** a quick or full D1 pass emits ranked, location-specific
+essentiality findings with one of the five prefixes and a concrete
+replacement, while the documented boundaries prevent minimalism from
+overriding D3, D4, D14, D15, or explicit requirements; no Ponytail
+plugin or hook is required.
+
+**Notes:** Executed in TDD mode. The four content-contract tests failed
+before the skill changes and passed afterward; the complete pytest
+suite is green (20 tests). Done-when was verified by the D1 ladder,
+quick/full routing references, boundary assertions, and README
+attribution. Ruff was not available locally; M15 does not require it.
+
+## M16: Lock the integration contract with content tests
+
+**Why:** The value of the integration is the boundary between
+"smallest correct implementation" and indiscriminate deletion. Without
+mechanical checks, later edits could drop a prefix, bypass D1 routing,
+or accidentally turn Ponytail into a second review system.
+
+**Approach:** Extend the focused content-contract test introduced in
+M15. It verifies that the five prefixes have one canonical
+definition, D1 remains mandatory in `quick` and always-deep in the
+registry, the safety/test exclusions remain present, README attribution
+is retained, and no new `ponytail-review` or `ponytail-audit` skill
+frontmatter is introduced. Add a milestone-bridge regression proving a
+D1 title such as `delete: unused adapter` survives
+`_findings_to_milestones.py` unchanged, preserving the hand-off to
+devplan without creating a runtime dependency between the repositories.
+
+**Tasks:**
+- [ ] Extend `tests/test_essentiality_contract.py` with registry and no-duplicate-skill assertions
+- [ ] Extend `tests/test_scripts.py` with a D1 prefixed-title round-trip through `_findings_to_milestones.py`
+- [ ] Keep the taxonomy single-sourced in D1 and reference it from cuts/templates rather than duplicating its definitions
+- [ ] Update `README.md` with the integration boundary: concepts imported, plugin not required
+- [ ] Test: run ruff and the complete pytest suite
+- [ ] Commit & push
+
+**Done when:** CI fails if D1 loses a prefix, its mandatory routing, its
+safety boundaries, its attribution, or the devplan round-trip; the
+repository still exposes only the `code-audit` skill.

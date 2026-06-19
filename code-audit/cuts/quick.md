@@ -34,6 +34,9 @@
    - **Always: D14 (correctness on the diff) + D1 (essentiality on the diff).**
      Correctness is the primary reason a quick scan exists — run it on
      every diff, not just when something looks risky.
+   - D1 findings use the essentiality taxonomy defined in
+     `dimensions/D01-code-essentiality.md`; rank the largest safe cut
+     first and name the concrete replacement.
 
 4. **Run methods only on the diff**, not the full codebase. The diff is the unit of review.
 

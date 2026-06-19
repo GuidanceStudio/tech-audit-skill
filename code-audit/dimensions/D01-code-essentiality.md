@@ -6,6 +6,36 @@ Always-deep. The most decay-prone dimension between audits. LLM-assisted code am
 
 **North star**: would removing this make the code *worse* or just *shorter*? If "shorter", it's a 🟡.
 
+## Essentiality ladder
+
+Run these checks in order and stop at the first replacement that fully
+preserves the required behavior:
+
+1. **`delete:`** the requirement, branch, flag, wrapper, or dead
+   flexibility is not needed; nothing replaces it.
+2. **`stdlib:`** the language standard library already provides the
+   behavior; name the exact function or module.
+3. **`native:`** the browser, runtime, framework, database, or operating
+   platform already provides the behavior; name the exact feature.
+4. **`yagni:`** an abstraction is speculative or has only one real use;
+   inline it until a second implementation or caller exists.
+5. **`shrink:`** custom code is still necessary but the same contract
+   can be expressed with fewer files, branches, dependencies, or lines;
+   describe the smaller form.
+
+Use the matching prefix at the start of the finding title. The ladder
+chooses the smallest **correct** implementation, not the smallest diff
+at any cost.
+
+### Non-negotiable boundaries
+
+Essentiality findings must not weaken correctness, required tests,
+trust-boundary validation, security controls, accessibility, error
+handling that prevents data-loss, or an explicit requirement. When a
+shorter implementation conflicts with one of these constraints, the
+constraint wins and the finding is dropped. Route defects in those
+areas to D14, D3, D4, or D15 instead of presenting deletion as the fix.
+
 ## Method
 
 ### Big-file scan

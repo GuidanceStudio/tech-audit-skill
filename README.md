@@ -22,10 +22,15 @@ This skill replaces all three with **methodical, severity-calibrated, context-aw
 - [`anthropics/claude-code-security-review`](https://github.com/anthropics/claude-code-security-review) (MIT)
 - [`VoltAgent/awesome-claude-code-subagents`](https://github.com/VoltAgent/awesome-claude-code-subagents) (MIT)
 - [`awesome-skills/code-review-skill`](https://github.com/awesome-skills/code-review-skill) (MIT)
+- [`DietrichGebert/ponytail`](https://github.com/DietrichGebert/ponytail) (MIT), adapted as the D1 essentiality ladder
 - OWASP Top 10, OWASP ASVS L1
 - A generalized **13-dimension tech-DD framework** forged on a multi-stack production codebase
 
 …and adds dimensions and patterns that AI-assisted-code workflows specifically need: setup replicability, LLM-clone density, regression-after-fix discipline, async-pool tenant-context leaks.
+
+Ponytail's decision model is integrated as review guidance. The
+Ponytail plugin is not required. This project does not install its
+lifecycle hooks, persistent modes, or duplicate review/audit skills.
 
 ## Install
 

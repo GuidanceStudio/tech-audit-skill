@@ -54,6 +54,20 @@ Optional fourth part for 🔴 only:
 
 4. **Threat model** — one-line link to `threat-models/<file>.md` if the finding fits a known pattern.
 
+## D1 essentiality prefixes
+
+D1 finding titles start with exactly one prefix from the essentiality
+taxonomy defined in `dimensions/D01-code-essentiality.md`. Follow the
+prefix with the concrete construct to remove, then name the exact
+replacement in the suggested fix. Do not redefine the taxonomy here;
+D1 is its single source of truth.
+
+Example:
+
+> `native: custom modal wrapper for one confirmation dialog. Replace
+> it with the platform dialog element and keep the existing focus and
+> accessibility behavior.`
+
 ---
 
 ## Severity vs confidence — two different axes
