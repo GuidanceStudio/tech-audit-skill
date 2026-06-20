@@ -16,6 +16,6 @@ jobs:
       - name: Lint scripts
         run: |
           pip install ruff pytest
-          ruff check code-audit/scripts/ tests/
+          ruff check tech-audit/scripts/ tests/
       - name: Run test suite
         run: python -m pytest tests/ -q

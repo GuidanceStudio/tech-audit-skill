@@ -35,7 +35,7 @@ column of the dimension registry in `SKILL.md`.
    - etc.
 
 6. **Persist + verify** per the Findings pipeline in `SKILL.md`: append
-   each dimension's rows to `.code-audit/work/<date>/findings.tsv` as
+   each dimension's rows to `.tech-audit/work/<date>/findings.tsv` as
    you close it; run the refutation pass on every 🔴 before it reaches
    the report. **When more than one dimension is requested and the
    harness has subagents, fan out** — one agent per dimension with the

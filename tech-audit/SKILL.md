@@ -1,5 +1,5 @@
 ---
-name: code-audit
+name: tech-audit
 description: Methodical codebase audit across a multi-dimension tech-DD framework. Routes by intent — security pass, release check, deep per-dimension, full tech-DD, or explicit quick scan. Stack-aware (PHP/Laravel, Python/FastAPI, TS/Node, shell, Docker). Use for "audit", "tech DD", "security review", "ready to ship?" — NOT for routine PR diff review.
 ---
 
@@ -15,8 +15,8 @@ wherever this skill folder is loaded.
 - "audit my code/project/codebase", "tech audit", "tech DD"
 - "security review", "security audit", "vuln scan"
 - "is this ready to ship?", "release check", "pre-release"
-- an explicit invocation of this skill (a `/code-audit` slash command,
-  an `@code-audit` mention, or however your assistant invokes skills)
+- an explicit invocation of this skill (a `/tech-audit` slash command,
+  an `@tech-audit` mention, or however your assistant invokes skills)
 
 Routine "review this PR/file" is better served by a lightweight diff-
 review tool if your assistant ships one. The `quick` cut here exists
@@ -102,7 +102,7 @@ Long audits outlive a single context window. Persist as you go and
 verify before you emit.
 
 - **Incremental findings file.** Write findings to
-  `.code-audit/work/<YYYY-MM-DD>/findings.tsv` — one TSV row per
+  `.tech-audit/work/<YYYY-MM-DD>/findings.tsv` — one TSV row per
   finding, the schema `scripts/_findings_to_milestones.py` consumes:
   `severity⇥dim⇥location⇥title⇥fix⇥effort⇥confidence` (the 7th column
   is M6; the script also accepts 6-column rows). Append **at the close
@@ -129,7 +129,7 @@ verify before you emit.
 So a re-audit doesn't re-litigate what was already decided, and the
 trend is mechanical rather than eyeballed:
 
-- **Accepted-findings baseline** — `.code-audit/accepted.tsv` in the
+- **Accepted-findings baseline** — `.tech-audit/accepted.tsv` in the
   target repo: one row per dismissed/accepted finding, key =
   `dim␟location␟title-slug`, plus severity, reason, date, optional
   `revisit-by`. Every cut filters its fresh findings against it before
@@ -139,7 +139,7 @@ trend is mechanical rather than eyeballed:
   `playbooks/false-positives.md`.
 - **Mechanical deltas** — `full` and `release` cuts diff the current
   `findings.tsv` against the most recent prior
-  `.code-audit/work/<date>/findings.tsv`: new / fixed / still-open per
+  `.tech-audit/work/<date>/findings.tsv`: new / fixed / still-open per
   severity. The report's trend section is generated from that diff,
   not from re-reading the previous prose report.
 
@@ -164,7 +164,7 @@ the merged `findings.tsv` stays unambiguous.
 
 ## Per-project extension
 
-If the target repo has `.code-audit/extras/`, load every `*.md` in it
+If the target repo has `.tech-audit/extras/`, load every `*.md` in it
 AFTER the default dimensions (schema: `extensions/README.md`).
 
 Operational cadence, starter pack, and false-positive dismissal live in

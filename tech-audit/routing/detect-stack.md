@@ -52,7 +52,7 @@ sharpen the language file's relevance:
 For a framework the skill ships no `languages/*.md` for (Symfony,
 Django, Flask, Rails, Go, Rust, …): run the generic dimension methods,
 state in the report that no stack file exists for it, and point the
-user to `.code-audit/extras/language-<name>.md` to add one. Don't load
+user to `.tech-audit/extras/language-<name>.md` to add one. Don't load
 a sibling framework's file and "note the differences" — that smuggles
 in wrong-stack assumptions.
 

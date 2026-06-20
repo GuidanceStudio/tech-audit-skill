@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# code-audit skill installer — multi-assistant.
+# tech-audit skill installer — multi-assistant.
 #
-# `code-audit/` is a flat, assistant-neutral skill payload. This installer
+# `tech-audit/` is a flat, assistant-neutral skill payload. This installer
 # places it where your coding assistant looks for skills, or wraps it for
 # assistants that use a different convention.
 #
@@ -20,12 +20,12 @@ AGENTS_DIR="$PWD"   # where the `agents` target writes AGENTS.md
 CLEANUP_DIR=""
 
 # agentskills.io-standard copy destinations (per assistant)
-CLAUDE_DEST="$HOME/.claude/skills/code-audit"
-CODEX_DEST="$HOME/.codex/skills/code-audit"
-OPENCODE_DEST="$HOME/.config/opencode/skills/code-audit"
+CLAUDE_DEST="$HOME/.claude/skills/tech-audit"
+CODEX_DEST="$HOME/.codex/skills/tech-audit"
+OPENCODE_DEST="$HOME/.config/opencode/skills/tech-audit"
 # neutral payload home that the gemini/agents wrappers point at
-NEUTRAL_HOME="$HOME/.config/code-audit"
-GEMINI_TOML="$HOME/.gemini/commands/code-audit.toml"
+NEUTRAL_HOME="$HOME/.config/tech-audit"
+GEMINI_TOML="$HOME/.gemini/commands/tech-audit.toml"
 
 cleanup_temp() {
     if [ -n "$CLEANUP_DIR" ] && [ -d "$CLEANUP_DIR" ]; then
@@ -36,7 +36,7 @@ trap cleanup_temp EXIT
 
 usage() {
     cat <<EOF
-Install the code-audit skill into your coding assistant.
+Install the tech-audit skill into your coding assistant.
 
 Usage:
     ./install.sh [OPTIONS]
@@ -51,11 +51,11 @@ Options:
     --help          Show this message.
 
 Targets:
-    claude    → ~/.claude/skills/code-audit/         (SKILL.md standard, verbatim)
-    codex     → ~/.codex/skills/code-audit/          (SKILL.md standard, verbatim)
-    opencode  → ~/.config/opencode/skills/code-audit/ (SKILL.md standard, verbatim)
-    gemini    → ~/.gemini/commands/code-audit.toml    (TOML wrapper) + payload in ~/.config/code-audit
-    agents    → AGENTS.md pointer (Cursor/Windsurf/Copilot/Aider/Continue) + payload in ~/.config/code-audit
+    claude    → ~/.claude/skills/tech-audit/         (SKILL.md standard, verbatim)
+    codex     → ~/.codex/skills/tech-audit/          (SKILL.md standard, verbatim)
+    opencode  → ~/.config/opencode/skills/tech-audit/ (SKILL.md standard, verbatim)
+    gemini    → ~/.gemini/commands/tech-audit.toml    (TOML wrapper) + payload in ~/.config/tech-audit
+    agents    → AGENTS.md pointer (Cursor/Windsurf/Copilot/Aider/Continue) + payload in ~/.config/tech-audit
     manual    → print the flat payload path; copy it wherever your tool reads skills
 
 Environment:
@@ -75,8 +75,8 @@ while [ $# -gt 0 ]; do
 done
 
 # Resolve the source payload (local checkout or remote clone)
-if [ -d "$SCRIPT_DIR/code-audit" ]; then
-    SRC_ROOT="$SCRIPT_DIR/code-audit"
+if [ -d "$SCRIPT_DIR/tech-audit" ]; then
+    SRC_ROOT="$SCRIPT_DIR/tech-audit"
 else
     if ! command -v git >/dev/null 2>&1; then
         echo "error: remote install requires 'git' on PATH" >&2
@@ -85,9 +85,9 @@ else
     CLEANUP_DIR="$(mktemp -d)"
     echo "Cloning $REPO_URL into temporary dir..."
     git clone --depth=1 "$REPO_URL" "$CLEANUP_DIR" >/dev/null 2>&1
-    SRC_ROOT="$CLEANUP_DIR/code-audit"
+    SRC_ROOT="$CLEANUP_DIR/tech-audit"
     if [ ! -d "$SRC_ROOT" ]; then
-        echo "error: cloned repo does not contain code-audit/" >&2
+        echo "error: cloned repo does not contain tech-audit/" >&2
         exit 1
     fi
 fi
@@ -112,16 +112,16 @@ copy_payload() {  # <dest>
     find "$dest" -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
     local sha; sha="$(src_sha)"
     [ -n "$sha" ] && printf '%s\n' "$sha" > "$dest/.installed-from"
-    echo "✅ Installed code-audit payload → $dest"
+    echo "✅ Installed tech-audit payload → $dest"
 }
 
 write_gemini_toml() {
     copy_payload "$NEUTRAL_HOME" || return 0
     mkdir -p "$(dirname "$GEMINI_TOML")"
     cat > "$GEMINI_TOML" <<TOML
-description = "code-audit — methodical multi-dimension codebase audit"
+description = "tech-audit — methodical multi-dimension codebase audit"
 prompt = """
-You are the code-audit skill. Follow the router and method catalog in the
+You are the tech-audit skill. Follow the router and method catalog in the
 skill payload, reading files on demand as it directs.
 
 Router: @{$NEUTRAL_HOME/SKILL.md}
@@ -132,27 +132,27 @@ TOML
     echo "✅ Wrote Gemini command → $GEMINI_TOML (payload in $NEUTRAL_HOME)"
 }
 
-AGENTS_MARK_START="<!-- code-audit:start -->"
-AGENTS_MARK_END="<!-- code-audit:end -->"
+AGENTS_MARK_START="<!-- tech-audit:start -->"
+AGENTS_MARK_END="<!-- tech-audit:end -->"
 
 write_agents_pointer() {  # <agents-dir>
     local dir="$1" file="$1/AGENTS.md"
     copy_payload "$NEUTRAL_HOME" || return 0
     mkdir -p "$dir"
-    # Strip any existing code-audit block, then append a fresh one (idempotent).
+    # Strip any existing tech-audit block, then append a fresh one (idempotent).
     if [ -f "$file" ] && grep -qF "$AGENTS_MARK_START" "$file"; then
         sed -i "/$AGENTS_MARK_START/,/$AGENTS_MARK_END/d" "$file"
     fi
     cat >> "$file" <<AGENTS
 $AGENTS_MARK_START
-## code-audit skill
+## tech-audit skill
 
 When asked to audit, security-review, or release-check this codebase, act
-as the code-audit skill: read \`$NEUTRAL_HOME/SKILL.md\` and follow its
+as the tech-audit skill: read \`$NEUTRAL_HOME/SKILL.md\` and follow its
 routing and method catalog.
 $AGENTS_MARK_END
 AGENTS
-    echo "✅ Added code-audit pointer → $file (payload in $NEUTRAL_HOME)"
+    echo "✅ Added tech-audit pointer → $file (payload in $NEUTRAL_HOME)"
 }
 
 check_copy() {  # <dest> <label>
@@ -206,11 +206,11 @@ run_install() {  # <target>
 
 interactive_menu() {
     cat <<EOF
-Where should code-audit be installed?
-  1) claude     ~/.claude/skills/code-audit
-  2) codex      ~/.codex/skills/code-audit
-  3) opencode   ~/.config/opencode/skills/code-audit
-  4) gemini     ~/.gemini/commands/code-audit.toml
+Where should tech-audit be installed?
+  1) claude     ~/.claude/skills/tech-audit
+  2) codex      ~/.codex/skills/tech-audit
+  3) opencode   ~/.config/opencode/skills/tech-audit
+  4) gemini     ~/.gemini/commands/tech-audit.toml
   5) agents     AGENTS.md pointer (Cursor/Windsurf/Copilot/Aider/Continue)
   6) all        claude + codex + opencode
   7) manual     just print the folder path to copy yourself

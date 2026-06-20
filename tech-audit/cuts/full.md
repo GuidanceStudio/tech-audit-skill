@@ -17,11 +17,11 @@ The complete multi-dimension tech-DD report.
 
 1. **Compute the trend mechanically** (per `SKILL.md` § Repeat-audit
    memory): diff this run's `findings.tsv` against the most recent
-   prior `.code-audit/work/<date>/findings.tsv` — fixed (gone),
+   prior `.tech-audit/work/<date>/findings.tsv` — fixed (gone),
    still-open (present in both), new (this run only), per severity.
    The trend section is generated from that diff, not from re-reading
    the previous prose report. Load the accepted-findings baseline
-   (`.code-audit/accepted.tsv`) and filter suppressed findings out
+   (`.tech-audit/accepted.tsv`) and filter suppressed findings out
    before reporting.
 
 2. **Detect the stack** (per `SKILL.md` § Step 2). Load every
@@ -36,11 +36,11 @@ The complete multi-dimension tech-DD report.
 
 4. For each dimension, run all methods in `dimensions/D<N>-*.md`. Load
    `threat-models/*.md` and `tools/*.md` as needed. **Append each
-   dimension's findings to `.code-audit/work/<date>/findings.tsv` as
+   dimension's findings to `.tech-audit/work/<date>/findings.tsv` as
    you close it, and run the 🔴 refutation pass** — both per the
    Findings pipeline in `SKILL.md`. Assemble the report from that file.
 
-5. **Project extensions**: if `.code-audit/extras/` exists in the
+5. **Project extensions**: if `.tech-audit/extras/` exists in the
    repo, load every `*.md` from it AFTER the default dimensions. Use
    them as additional dimensions (e.g. D17+) in the report.
 
@@ -83,7 +83,7 @@ independent, so parallelize:
    scan-tier dims (D6, D7, D9, D11, D12) may run on a cheaper model;
    always-deep / default-deep dims and the 🔴 verifiers stay on the
    main model.
-4. **Merge** all rows into `.code-audit/work/<date>/findings.tsv`,
+4. **Merge** all rows into `.tech-audit/work/<date>/findings.tsv`,
    deduplicating cross-dimension overlaps (see dedup rule below).
 5. **Refute** — one independent verifier agent per 🔴 (per the
    Findings pipeline refutation pass); drop/downgrade what's refuted.

@@ -1,6 +1,6 @@
 # Per-project extensions
 
-Drop project-specific audit material in `.code-audit/extras/` at the repo root. The skill loads every `*.md` file from that directory AFTER the default dimensions.
+Drop project-specific audit material in `.tech-audit/extras/` at the repo root. The skill loads every `*.md` file from that directory AFTER the default dimensions.
 
 ## When to use
 
@@ -13,7 +13,7 @@ Drop project-specific audit material in `.code-audit/extras/` at the repo root. 
 
 ```
 your-repo/
-├── .code-audit/
+├── .tech-audit/
 │   ├── extras/
 │   │   ├── D14-voice-quality.md         # additional dim
 │   │   ├── language-elixir.md           # stack the skill doesn't ship

@@ -1,4 +1,4 @@
-# DEVPLAN — code-audit skill
+# DEVPLAN — tech-audit skill
 
 Findings from the 2026-06-10 self-audit of the skill (content + pipeline
 review). Milestones ordered by priority. Source analysis: bugs verified
@@ -648,7 +648,7 @@ devplan without creating a runtime dependency between the repositories.
 
 **Done when:** CI fails if D1 loses a prefix, its mandatory routing, its
 safety boundaries, its attribution, or the devplan round-trip; the
-repository still exposes only the `code-audit` skill.
+repository still exposes only the `tech-audit` skill.
 
 **Notes:** Executed in TDD mode. The expanded suite was red on the
 missing explicit README integration boundary, then green after the

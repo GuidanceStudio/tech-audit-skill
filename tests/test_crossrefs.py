@@ -1,10 +1,10 @@
 """Cross-reference linter: no dead links, no unreachable shipped content.
 
 Scope: references whose first path segment is a skill top-level dir
-(after stripping an optional `claude/code-audit/` prefix), plus
+(after stripping an optional `claude/tech-audit/` prefix), plus
 bare-filename references that resolve next to the referencing file.
 `<placeholder>` segments are treated as globs; `{a,b}` braces expand.
-Target-repo paths (docs/, .code-audit/extras/, app/, ...) are out of
+Target-repo paths (docs/, .tech-audit/extras/, app/, ...) are out of
 scope by construction.
 """
 from __future__ import annotations

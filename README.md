@@ -1,7 +1,7 @@
 # tech-audit-skill
 
 A skill for **honest, actionable software audits**. Installs as
-**`code-audit`**. Routes by intent (quick PR review, security pass,
+**`tech-audit`**. Routes by intent (quick PR review, security pass,
 pre-release check, deep dimension, or full tech-DD) across a
 13-dimension framework.
 
@@ -45,10 +45,10 @@ interactive menu, or pass `--target`:
 git clone git@github.com:GuidanceStudio/tech-audit-skill.git
 cd tech-audit-skill
 ./install.sh                      # interactive menu
-./install.sh --target claude      # ~/.claude/skills/code-audit/
-./install.sh --target codex        # ~/.codex/skills/code-audit/
-./install.sh --target opencode     # ~/.config/opencode/skills/code-audit/
-./install.sh --target gemini        # ~/.gemini/commands/code-audit.toml (+ payload)
+./install.sh --target claude      # ~/.claude/skills/tech-audit/
+./install.sh --target codex        # ~/.codex/skills/tech-audit/
+./install.sh --target opencode     # ~/.config/opencode/skills/tech-audit/
+./install.sh --target gemini        # ~/.gemini/commands/tech-audit.toml (+ payload)
 ./install.sh --target agents        # AGENTS.md pointer for Cursor/Windsurf/Copilot/Aider/Continue
 ./install.sh --target all           # claude + codex + opencode
 ./install.sh --target manual        # print the folder path; copy it yourself
@@ -60,14 +60,14 @@ Remote one-liner (no clone needed):
 bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/tech-audit-skill/main/install.sh) --target claude
 ```
 
-`claude`, `codex`, and `opencode` get the `code-audit/` folder copied
+`claude`, `codex`, and `opencode` get the `tech-audit/` folder copied
 verbatim — it's the shared [agentskills.io](https://agentskills.io)
 `SKILL.md` standard, so one payload serves all three. `gemini` gets a
 generated TOML command (Gemini doesn't use SKILL.md); `agents` writes an
 [`AGENTS.md`](https://agents.md) pointer for the broad tier. Flags:
 `--force` (overwrite), `--check` (report drift vs source, per `--target`),
 `--agents-dir DIR` (where the `agents` pointer is written). Or skip the
-installer entirely — `code-audit/` is self-contained, copy it anywhere
+installer entirely — `tech-audit/` is self-contained, copy it anywhere
 your tool reads skills.
 
 ## Use
@@ -77,10 +77,10 @@ what you want:
 
 | Assistant | How to invoke |
 |---|---|
-| Claude Code | `/code-audit`, or just ask ("audit my codebase") |
-| Codex CLI | `/code-audit` (same SKILL.md standard), or ask |
-| opencode | `/code-audit`, or ask |
-| Gemini CLI | `/code-audit` (installed as a TOML command) |
+| Claude Code | `/tech-audit`, or just ask ("audit my codebase") |
+| Codex CLI | `/tech-audit` (same SKILL.md standard), or ask |
+| opencode | `/tech-audit`, or ask |
+| Gemini CLI | `/tech-audit` (installed as a TOML command) |
 | Cursor / Windsurf / Copilot / Aider | reference the skill from `AGENTS.md`, then ask |
 
 Typical phrasings: `"audit my codebase"`, `"security review"`,
@@ -101,7 +101,7 @@ The skill picks the right **cut** based on your phrasing, or asks if it's ambigu
 **Quick PR review**:
 
 ```
-You: /code-audit on https://github.com/our-org/our-repo/pull/143
+You: /tech-audit on https://github.com/our-org/our-repo/pull/143
 
 Claude: [scans the diff, picks dims based on what was touched, emits a
 quick-scan output with severity-tagged findings + ship/hold verdict]
@@ -158,7 +158,7 @@ D4, D5, D8 carry the ⚠️ default-deep mark because they're the high-blast-rad
 | Quarterly | `full` cut + restore-from-backup drill | Every 3 months (~5-7 h) |
 | Triggered | `deep`, `security` cuts | New integration; post-incident; pre-VC |
 
-See [`code-audit/playbooks/operations.md`](code-audit/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
+See [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
 
 ## Severity scheme
 
@@ -170,7 +170,7 @@ See [`code-audit/playbooks/operations.md`](code-audit/playbooks/operations.md) f
 
 ## Per-project extensions
 
-Drop `.code-audit/extras/*.md` files in your repo to add project-specific dimensions, threat models, or stack files. The skill loads them after the defaults. See [`code-audit/extensions/README.md`](code-audit/extensions/README.md) for the schema.
+Drop `.tech-audit/extras/*.md` files in your repo to add project-specific dimensions, threat models, or stack files. The skill loads them after the defaults. See [`tech-audit/extensions/README.md`](tech-audit/extensions/README.md) for the schema.
 
 ## Repository layout
 
@@ -180,7 +180,7 @@ tech-audit-skill/
 ├── README.md                        # this file
 ├── LICENSE                          # Apache-2.0
 ├── docs/examples/                   # worked example reports (not shipped)
-└── code-audit/                      # the flat, assistant-neutral skill payload
+└── tech-audit/                      # the flat, assistant-neutral skill payload
     ├── SKILL.md                     # routing spine (agentskills.io standard)
     ├── routing/detect-stack.md
     ├── cuts/{quick,security,release,deep,full}.md
@@ -201,7 +201,7 @@ tech-audit-skill/
                 _doctor_fresh_clone,_findings_to_milestones}.py
 ```
 
-`code-audit/` is the whole skill — copy it anywhere your assistant
+`tech-audit/` is the whole skill — copy it anywhere your assistant
 reads skills, or use `install.sh` (next section).
 
 Each file has one clear purpose. Files cross-reference rather than duplicate — updating a fact happens in one place. The skill itself follows the rules it audits (D1 + D2).
@@ -224,7 +224,7 @@ Each file has one clear purpose. Files cross-reference rather than duplicate —
 - **Snyk / SonarCloud paid tier.** Trivy + Semgrep + native deps audits cover ~90% for €0.
 - **STRIDE threat-model documents per feature.** Nobody reads them. A 5-line release-time "what changed in trust boundaries?" note works.
 
-See [`code-audit/playbooks/operations.md`](code-audit/playbooks/operations.md) § Anti-patterns for the full list.
+See [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) § Anti-patterns for the full list.
 
 ## Contributing
 

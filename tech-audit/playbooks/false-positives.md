@@ -11,7 +11,7 @@ baseline, next section) so the next audit doesn't re-surface them.
 
 When you (or the user) decide an audit finding is a false positive or
 an accepted risk, don't just say so in chat — it evaporates and the
-next audit raises it again. Append a row to `.code-audit/accepted.tsv`
+next audit raises it again. Append a row to `.tech-audit/accepted.tsv`
 in the target repo:
 
 ```

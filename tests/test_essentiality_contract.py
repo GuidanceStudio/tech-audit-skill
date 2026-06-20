@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parent.parent
-SKILL = REPO / "code-audit"
+SKILL = REPO / "tech-audit"
 D1 = SKILL / "dimensions" / "D01-code-essentiality.md"
 PHRASING = SKILL / "templates" / "finding-phrasing.md"
 QUICK = SKILL / "cuts" / "quick.md"
@@ -108,7 +108,7 @@ def test_d1_has_ponytail_scan_method() -> None:
 def test_d1_has_debt_register_cross_reference() -> None:
     d1 = D1.read_text()
     assert "Debt-register cross-reference" in d1
-    assert ".code-audit/debt.tsv" in d1
+    assert ".tech-audit/debt.tsv" in d1
     assert "revisit_by" in d1
     assert "expired" in d1.lower()  # reactivates expired debt
     assert "suppressed:" in d1.lower()  # reports suppressed count

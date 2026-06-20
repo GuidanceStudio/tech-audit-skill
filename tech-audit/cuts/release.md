@@ -17,7 +17,7 @@ what changed since the last tag.
 
 ## Procedure
 
-0. **Load the accepted-findings baseline** (`.code-audit/accepted.tsv`,
+0. **Load the accepted-findings baseline** (`.tech-audit/accepted.tsv`,
    per `SKILL.md` § Repeat-audit memory) and filter suppressed findings
    out of the ship-block decision; report `suppressed: N`. Past their
    `revisit-by` date, accepted findings resurface.
@@ -55,7 +55,7 @@ what changed since the last tag.
    baseline. Regression > 20% → 🔴.
 
 6. **Persist + verify** per the Findings pipeline in `SKILL.md`:
-   accumulate findings in `.code-audit/work/<date>/findings.tsv`; run
+   accumulate findings in `.tech-audit/work/<date>/findings.tsv`; run
    the 🔴 refutation pass before the ship-block list — a false 🔴
    wrongly holds a release.
 

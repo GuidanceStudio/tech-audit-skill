@@ -64,11 +64,11 @@ def test_codex_and_opencode_verbatim(tmp_path: Path) -> None:
 def test_gemini_emits_toml_and_payload(tmp_path: Path) -> None:
     res = run_install(tmp_path, "--force", "--target", "gemini")
     assert res.returncode == 0
-    toml = tmp_path / ".gemini" / "commands" / "code-audit.toml"
+    toml = tmp_path / ".gemini" / "commands" / "tech-audit.toml"
     assert toml.is_file()
     body = toml.read_text()
     assert "prompt" in body and "SKILL.md" in body
-    assert (tmp_path / ".config" / "code-audit" / "SKILL.md").is_file()
+    assert (tmp_path / ".config" / "tech-audit" / "SKILL.md").is_file()
     assert run_install(tmp_path, "--check", "--target", "gemini").returncode == 0
 
 
@@ -80,10 +80,10 @@ def test_agents_writes_pointer_idempotently(tmp_path: Path) -> None:
     run_install(tmp_path, "--force", "--target", "agents", "--agents-dir", str(proj))
     agents = proj / "AGENTS.md"
     assert agents.is_file()
-    assert "code-audit:start" in agents.read_text()
+    assert "tech-audit:start" in agents.read_text()
     # Second run must not duplicate the block.
     run_install(tmp_path, "--force", "--target", "agents", "--agents-dir", str(proj))
-    assert agents.read_text().count("code-audit:start") == 1
+    assert agents.read_text().count("tech-audit:start") == 1
 
 
 # --- manual ---
@@ -91,6 +91,6 @@ def test_agents_writes_pointer_idempotently(tmp_path: Path) -> None:
 def test_manual_prints_payload_path(tmp_path: Path) -> None:
     res = run_install(tmp_path, "--target", "manual")
     assert res.returncode == 0
-    assert "code-audit" in res.stdout
+    assert "tech-audit" in res.stdout
     # manual writes nothing
     assert not (tmp_path / ".claude").exists()

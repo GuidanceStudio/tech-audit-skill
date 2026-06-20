@@ -144,7 +144,7 @@ Files at the top are where drift is likeliest — bias the deep review here.
 
 ### Debt-register cross-reference
 
-Before emitting findings, load `.code-audit/debt.tsv` if it exists in
+Before emitting findings, load `.tech-audit/debt.tsv` if it exists in
 the target repo. For each D01 finding:
 
 - If a debt row matches (same file + same topic) AND `revisit_by` is in
@@ -155,7 +155,7 @@ the target repo. For each D01 finding:
   Upgrade: <path>."
 
 In the D01 dimension summary, include `suppressed: N findings covered
-by active debt (see .code-audit/debt.tsv)`.
+by active debt (see .tech-audit/debt.tsv)`.
 
 ### Comment-weight scan
 
