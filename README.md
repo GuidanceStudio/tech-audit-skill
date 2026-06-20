@@ -34,7 +34,7 @@ finding taxonomy. **Runtime dependency:** none; the Ponytail plugin is
 not required. This project does not install its lifecycle hooks,
 persistent modes, or duplicate review/audit skills. Code-audit remains
 authoritative for routing, severity, safety boundaries, findings, and
-devplan hand-off.
+forge-flow hand-off.
 
 ## Install
 
@@ -256,6 +256,6 @@ across near-duplicates.
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
 
-Built on the prior art of the projects listed in [Why this exists](#why-this-exists); each retains its own license. The skill's own framework + glue + dimensions are Apache-2.0.
+Built on the prior art of the projects listed in [Why this exists](#why-this-exists); each retains its own license.
