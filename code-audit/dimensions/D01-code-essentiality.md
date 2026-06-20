@@ -142,6 +142,64 @@ git log --since="3 months ago" --pretty=format: --name-only | sort | uniq -c | s
 
 Files at the top are where drift is likeliest — bias the deep review here.
 
+### Debt-register cross-reference
+
+Before emitting findings, load `.code-audit/debt.tsv` if it exists in
+the target repo. For each D01 finding:
+
+- If a debt row matches (same file + same topic) AND `revisit_by` is in
+  the future or absent → suppress the finding, increment a suppressed
+  counter. Record the matching debt row as the suppression reason.
+- If a debt row matches AND `revisit_by` is in the past → promote the
+  finding to 🔴 with the note: "intentional debt expired on <date>.
+  Upgrade: <path>."
+
+In the D01 dimension summary, include `suppressed: N findings covered
+by active debt (see .code-audit/debt.tsv)`.
+
+### Comment-weight scan
+
+```sh
+grep -rn '^[[:space:]]*//\|^[[:space:]]*#\|^[[:space:]]*/\*\*' \
+  --include="*.{py,ts,js,php,go,rs}" | head -50
+```
+
+For each comment block found in the sample:
+
+- Does it say **why** (intent, trade-off) or just **what** (restates the
+  code)? If "what" and the code is already clear → 🟢 `shrink:`.
+- Is the docstring longer than the function signature it decorates and
+  adds no information beyond the parameter names? → 🟢 `shrink:`.
+- Does it explain a non-obvious behavior, a gotcha, or a deliberate
+  trade-off? → keep (these are the comments that earn their place).
+- Is it a `ponytail:` structured comment? → skip (handled by the
+  ponytail: scan below).
+
+This method never flags public-API documentation (the contract layer),
+only inline and docstring comments that restate the implementation.
+
+### ponytail: scan
+
+```sh
+grep -rn 'ponytail:' --include="*.{py,ts,js,php,go,rs}"
+```
+
+For each hit, parse the simplification description, ceiling value with
+unit, and upgrade path. Then:
+
+- **Ceiling exceeded** given current state (e.g. ">10k records" but the
+  table has 50k) → 🔴 with note: "intentional shortcut outgrew its
+  ceiling. Upgrade: <path>."
+- **Ceiling not yet reached** → suppress any related essentiality
+  finding for this code (the simplification is intentional and within
+  limits). Record the suppression with the ponytail: location as
+  justification.
+- **Ceiling not measurable automatically** (e.g. "when latency >100ms")
+  → 🟡 with note: "verify the ponytail: ceiling manually."
+
+When a ponytail: comment suppresses a finding, the finding is excluded
+from the report and counted separately from debt-register suppressions.
+
 ## PoC bar
 
 - Linter configured + enforced (CI step) on every language present.

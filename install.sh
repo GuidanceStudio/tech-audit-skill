@@ -8,9 +8,9 @@ set -euo pipefail
 # assistants that use a different convention.
 #
 # Local mode:  ./install.sh [OPTIONS]
-# Remote mode: bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh)
+# Remote mode: bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/tech-audit-skill/main/install.sh)
 
-REPO_URL="${CODE_AUDIT_REPO_URL:-https://github.com/GuidanceStudio/code-repository-audit-skill.git}"
+REPO_URL="${CODE_AUDIT_REPO_URL:-https://github.com/GuidanceStudio/tech-audit-skill.git}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 FORCE=false

@@ -54,7 +54,7 @@ Either works. The audit report's status table lists them after the default 13.
 
 If an extension you've written would be useful to other projects (not specific to your product), consider:
 
-- Opening an issue / PR against `github:GuidanceStudio/code-repository-audit-skill` proposing it as a default dimension or threat-model.
+- Opening an issue / PR against `github:GuidanceStudio/tech-audit-skill` proposing it as a default dimension or threat-model.
 - Or sharing as a community extension repo for others to copy.
 
 ## Example — additional dimension

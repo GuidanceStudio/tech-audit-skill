@@ -22,7 +22,11 @@ def test_d1_defines_the_ordered_essentiality_ladder_once() -> None:
 
     positions = [d1.index(prefix) for prefix in PREFIXES]
     assert positions == sorted(positions)
-    assert all(d1.count(prefix) == 1 for prefix in PREFIXES)
+    # All prefixes must appear at least once; shrink: may appear >1×
+    # (ladder definition + comment-weight scan both reference it).
+    assert all(d1.count(p) >= 1 for p in PREFIXES)
+    for p in ("delete:", "stdlib:", "native:", "yagni:"):
+        assert d1.count(p) == 1, f"{p} must be single-sourced"
 
 
 def test_d1_taxonomy_is_wired_into_review_output() -> None:
@@ -79,3 +83,32 @@ def test_readme_has_an_explicit_integration_boundary() -> None:
     assert "### Ponytail integration boundary" in readme
     assert "Concepts imported" in readme
     assert "Runtime dependency" in readme
+
+
+# ---- M17-M19: comment essentiality, ponytail: scan, debt cross-reference ----
+
+
+def test_d1_has_comment_weight_scan() -> None:
+    d1 = D1.read_text()
+    assert "Comment-weight scan" in d1
+    assert "why" in d1.lower()
+    assert "shrink:" in d1  # comment findings use shrink: prefix
+    assert "public-API" in d1  # boundary: never flag API docs
+
+
+def test_d1_has_ponytail_scan_method() -> None:
+    d1 = D1.read_text()
+    assert "ponytail: scan" in d1
+    assert "Ceiling exceeded" in d1
+    assert "Ceiling not yet reached" in d1
+    assert "upgrade:" in d1.lower()
+    assert "measurable" in d1.lower()
+
+
+def test_d1_has_debt_register_cross_reference() -> None:
+    d1 = D1.read_text()
+    assert "Debt-register cross-reference" in d1
+    assert ".code-audit/debt.tsv" in d1
+    assert "revisit_by" in d1
+    assert "expired" in d1.lower()  # reactivates expired debt
+    assert "suppressed:" in d1.lower()  # reports suppressed count

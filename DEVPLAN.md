@@ -55,18 +55,13 @@ Exit gate: `_detect_stack.py` on `cerase-core` emits
 unsorted severities round-trips through `_findings_to_milestones.py`
 with correct IDs; `git ls-files | grep pycache` is empty.
 
-## M2 — Rename to de-conflict from the builtin `/code-review`
+## M2 — Rename to `code-audit`
 
 Status: **DONE** (2026-06-10) — IDD (rename/content; regression guard =
 M1 tests, path-agnostic via glob, still green 6/6). Done-when verified:
 installed at `~/.claude/skills/code-audit/`, old `code-review/` copy
 removed, install excludes `__pycache__`. Legit `code-review` mentions
 survive only as upstream project names + the builtin reference.
-
-Claude Code now ships a builtin `code-review` skill; two registered
-skills share the name and routing is ambiguous. New name:
-**`code-audit`** — the distinctive value is the audit/tech-DD
-framework, not PR review, which the builtin already covers.
 
 - [x] Rename `claude/code-review/` → `claude/code-audit/`, update
   `name:` in SKILL.md frontmatter and every self-reference
@@ -661,3 +656,134 @@ documentation change. Verification: 24 pytest tests pass, `uvx ruff
 check code-audit/scripts/ tests/` passes, the prefixed D1 title
 round-trips unchanged, and the contract rejects duplicate Ponytail
 skill frontmatter.
+
+---
+
+## Follow-up — Comment essentiality, ponytail: scan, debt cross-reference
+
+Complete the Ponytail integration with the three remaining concepts
+identified in the 2026-06-20 gap analysis: flagging comments that don't
+carry their weight, recognizing `ponytail:` structured comments during
+audit, and cross-referencing the debt-tracking file populated by devplan.
+
+Recommended order: M17 → M18 → M19.
+
+### M17: Comment essentiality — flag dead-weight comments in D01
+
+**Why:** D01 already hunts dead code, unearned abstractions, and
+duplication. But a comment that restates the code verbatim is debt too:
+it occupies cognitive space, must be maintained, and lies when the code
+changes. D01 must recognize comments that don't carry their weight and
+flag them with the same `shrink:` prefix used for verbose code.
+
+**Approach:** Add a **Comment-weight scan** method to
+`code-audit/dimensions/D01-code-essentiality.md`:
+
+```
+### Comment-weight scan
+
+grep -rn '^[[:space:]]*//\|^[[:space:]]*#\|^[[:space:]]*/\*\*' \
+  --include="*.{py,ts,js,php,go,rs}" | head -50
+
+For each comment block:
+- Does it say *why* (intent, trade-off) or just *what* (restates the
+  code)? If "what" and the code is already clear → 🟢 shrink:.
+- Is the docstring longer than the function signature it decorates and
+  adds no information beyond the parameter names? → 🟢 shrink:.
+- Does it explain a non-obvious behavior, a gotcha, or a deliberate
+  trade-off? → keep (these are the comments that earn their place).
+- Is it a ponytail: structured comment? → skip (handled by M18).
+
+The method never flags public-API documentation (the contract layer),
+only inline and docstring comments that restate the implementation.
+```
+
+**Tasks:**
+- [ ] Add the Comment-weight scan method to `code-audit/dimensions/D01-code-essentiality.md`
+- [ ] Extend `tests/test_essentiality_contract.py` to assert the comment-weight method exists in D01
+- [ ] Run the full pytest suite; crossref linter green
+- [ ] Commit & push
+
+**Done when:** a D01 pass on a codebase with verbose comments emits
+`shrink:` findings for comments that restate the code, and CI verifies
+the method is present.
+
+### M18: `ponytail:` recognition — audit-aware intentional shortcuts
+
+**Why:** Today D01 doesn't know `ponytail:` comments exist. If it finds
+an O(n) linear scan, it flags it as a potential problem — even when the
+adjacent `ponytail:` comment documents it as intentional with a known
+ceiling. D01 must become smarter: parse the comment, compare against the
+ceiling, and act accordingly. This closes the loop between devplan's
+simplification step (M22) and the audit: intentional shortcuts are no
+longer false positives.
+
+**Approach:** Add a **ponytail: scan** method to D01:
+
+```
+### ponytail: scan
+
+grep -rn 'ponytail:' --include="*.{py,ts,js,php,go,rs}"
+
+For each hit, parse: the simplification description, ceiling value with
+unit, and upgrade path. Then:
+- Ceiling exceeded given current state (e.g. ">10k records" but the
+  table has 50k) → 🔴 with note: "intentional shortcut outgrew its
+  ceiling on <date>. Upgrade: <path>."
+- Ceiling not yet reached → suppress any related essentiality finding
+  for this code (the O(n) scan is intentional and within limits).
+  Record the suppression with the ponytail: location as justification.
+- Ceiling not measurable automatically (e.g. "when latency >100ms")
+  → 🟡 with note: "verify the ponytail: ceiling manually."
+```
+
+**Tasks:**
+- [ ] Add the ponytail: scan method to `code-audit/dimensions/D01-code-essentiality.md`
+- [ ] Extend `tests/test_essentiality_contract.py` to assert the scan method exists and documents ceiling-gating
+- [ ] Full pytest suite + crossref linter green
+- [ ] Commit & push
+
+**Done when:** a D01 pass finds ponytail: comments and either suppresses
+related findings (ceiling not reached) or promotes them to 🔴 (ceiling
+exceeded), and CI verifies the method contract.
+
+### M19: Debt tracking cross-reference — `.code-audit/debt.tsv` in the audit loop
+
+**Why:** The `.code-audit/debt.tsv` file populated by devplan (M23) is
+useless if the audit doesn't read it. D01 must cross-reference its
+findings against the debt register: suppress those covered by active
+debt, reactivate those whose revisit date has passed. This is the
+mechanical bridge between the two skills — design-time decisions feed
+audit-time verification without manual hand-off.
+
+**Approach:** Add a **Debt-register cross-reference** step at the start
+of D01's method execution, before findings are emitted:
+
+```
+### Debt-register cross-reference
+
+Before emitting findings, load `.code-audit/debt.tsv` if it exists.
+For each D01 finding:
+- If a debt row matches (same file + same topic) AND revisit_by is in
+  the future OR absent → suppress the finding, increment a suppressed
+  counter. Record the matching debt row as the suppression reason.
+- If a debt row matches AND revisit_by is in the past → promote the
+  finding to 🔴 with note: "intentional debt expired on <date>.
+  Upgrade: <path>."
+```
+
+In the D01 dimension summary: `suppressed: N findings covered by active
+debt (see .code-audit/debt.tsv)`. The suppressed count lets the
+reviewer see how much intentional debt is currently active versus how
+many real findings need attention.
+
+**Tasks:**
+- [ ] Add the Debt-register cross-reference step to `code-audit/dimensions/D01-code-essentiality.md`
+- [ ] Extend `tests/test_essentiality_contract.py` to assert the cross-reference step exists and handles both active and expired debt
+- [ ] Full pytest suite + crossref linter green
+- [ ] Install + `--check` OK
+- [ ] Commit & push
+
+**Done when:** a D01 pass on a repo with `.code-audit/debt.tsv`
+suppresses findings covered by active debt, reactivates expired debt
+as 🔴, and reports the suppressed count; CI verifies the contract.

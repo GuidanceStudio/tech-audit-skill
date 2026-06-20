@@ -1,10 +1,9 @@
-# code-repository-audit-skill
+# tech-audit-skill
 
-A Claude skill for **honest, actionable software audits**. The skill
-installs as **`code-audit`** (renamed from `code-review` in v0.2:
-Claude Code now ships a builtin `code-review` skill for PR diff
-review, and the two names collided — this skill's distinctive value is
-the audit/tech-DD framework, so it took the audit name). Routes by intent (quick PR review, security pass, pre-release check, deep dimension, or full tech-DD) across a 13-dimension framework.
+A skill for **honest, actionable software audits**. Installs as
+**`code-audit`**. Routes by intent (quick PR review, security pass,
+pre-release check, deep dimension, or full tech-DD) across a
+13-dimension framework.
 
 Built for fast-but-solid startups. Generalist core, stack-aware extensions for **PHP/Laravel, Python/FastAPI, TypeScript/Node, shell, and Docker**.
 
@@ -43,8 +42,8 @@ The installer is multi-assistant. Run it with no target for an
 interactive menu, or pass `--target`:
 
 ```sh
-git clone git@github.com:GuidanceStudio/code-repository-audit-skill.git
-cd code-repository-audit-skill
+git clone git@github.com:GuidanceStudio/tech-audit-skill.git
+cd tech-audit-skill
 ./install.sh                      # interactive menu
 ./install.sh --target claude      # ~/.claude/skills/code-audit/
 ./install.sh --target codex        # ~/.codex/skills/code-audit/
@@ -58,7 +57,7 @@ cd code-repository-audit-skill
 Remote one-liner (no clone needed):
 
 ```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/code-repository-audit-skill/main/install.sh) --target claude
+bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/tech-audit-skill/main/install.sh) --target claude
 ```
 
 `claude`, `codex`, and `opencode` get the `code-audit/` folder copied
@@ -176,7 +175,7 @@ Drop `.code-audit/extras/*.md` files in your repo to add project-specific dimens
 ## Repository layout
 
 ```
-code-repository-audit-skill/
+tech-audit-skill/
 ├── install.sh                       # multi-assistant installer
 ├── README.md                        # this file
 ├── LICENSE                          # Apache-2.0
@@ -229,7 +228,7 @@ See [`code-audit/playbooks/operations.md`](code-audit/playbooks/operations.md) �
 
 ## Contributing
 
-Open an issue or PR against [GuidanceStudio/code-repository-audit-skill](https://github.com/GuidanceStudio/code-repository-audit-skill).
+Open an issue or PR against [GuidanceStudio/tech-audit-skill](https://github.com/GuidanceStudio/tech-audit-skill).
 
 A finding that recurs across projects might warrant a default dimension or threat-model — propose it. A stack-specific gotcha that isn't in `languages/` — add it. Keep additions in the same style: short, concrete, cross-referenced.
 
