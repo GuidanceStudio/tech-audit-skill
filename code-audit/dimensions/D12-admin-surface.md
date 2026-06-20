@@ -146,5 +146,5 @@ whose verb mutates state, compared against the public API routes.
 - This dimension audits admin-surface **source** (empty-states, parity,
   failure routing). Rendered UI/UX depth — visual design, WCAG
   accessibility, responsive behavior on real screenshots — is the
-  `ui-review` skill's job, not this one. Point the user there for a
+  `uxui-audit` skill's job, not this one. Point the user there for a
   rendered-interface review.

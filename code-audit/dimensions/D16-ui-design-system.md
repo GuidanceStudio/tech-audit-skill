@@ -106,7 +106,7 @@ Decorative/long animations, or no `prefers-reduced-motion` guard → 🟡
 
 Source proves the *system*; only a render proves the *result*. When the
 app is runnable with Node + Playwright, use the **shared rendered
-hand-off** (see D15): invoke the `ui-review` skill (or its
+hand-off** (see D15): invoke the `uxui-audit` skill (or its
 `scripts/capture.mjs`) once, and apply its **Visual design** and
 **Responsive** dimensions to the screenshots — that skill owns capture
 and the pixel rubric. Fold findings back tagged `D16`. Run the capture
@@ -127,14 +127,14 @@ rendered pass as **deferred**.
 
 - Design tokens enforced (lint rule against raw hex/px in components).
 - Advanced rendered pass clean of severity-3+ visual/responsive
-  findings on every release (via `ui-review`).
+  findings on every release (via `uxui-audit`).
 - A documented component library; new UI composes it rather than
   restyling.
 
 ## Cross-references
 
 - D15 — UX & interaction (shares the advanced rendered hand-off; run
-  `ui-review` capture once, split findings D15/D16).
+  `uxui-audit` capture once, split findings D15/D16).
 - D12 — admin-surface coherence (label/state consistency overlaps;
   keep a finding in one dimension).
-- `ui-review` skill — owns rendered capture + the visual-design rubric.
+- `uxui-audit` skill — owns rendered capture + the visual-design rubric.

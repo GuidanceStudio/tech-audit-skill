@@ -10,7 +10,7 @@ Default-deep when a UI surface is detected (frontend markers — see
 that needs no running app, and an **advanced** rendered pass that drives
 a real browser. D12 covers admin-surface coherence; this covers
 product-wide UX; the rendered pixel review is delegated to the
-`ui-review` skill (don't reimplement capture here).
+`uxui-audit` skill (don't reimplement capture here).
 
 ## Base pass — source-level (always)
 
@@ -89,7 +89,7 @@ grep -rnE '>[A-Z][a-z]+ [a-z]' --include='*.{tsx,jsx,vue,blade.php}' . | grep -v
 ```
 
 In a project that HAS an i18n layer, user-facing strings bypassing it →
-🟡; mixed-language UI in one surface → 🟡 (see `ui-review` for the
+🟡; mixed-language UI in one surface → 🟡 (see `uxui-audit` for the
 rendered check).
 
 ### Perceived performance
@@ -104,13 +104,13 @@ The base pass proves the code has the branches; only a render proves the
 user can actually move through them. When the app is runnable and
 Node + Playwright are available:
 
-- **Hand off to the `ui-review` skill** (or run its
+- **Hand off to the `uxui-audit` skill** (or run its
   `scripts/capture.mjs`) to screenshot the real surfaces, then apply its
   Usability (Nielsen), State-coverage, and Responsive dimensions. That
   skill owns rendered capture + the pixel-level rubric — invoke it
   rather than duplicating it.
 - Fold the rendered findings back into this audit's `findings.tsv`
-  tagged `D15`, cross-referencing the `ui-review` report.
+  tagged `D15`, cross-referencing the `uxui-audit` report.
 
 Without a runnable app or Playwright, stay source-level and record the
 rendered pass as **deferred** in the report (don't silently skip it).
@@ -124,7 +124,7 @@ rendered pass as **deferred** in the report (don't silently skip it).
 
 ## Production bar
 
-- Advanced rendered pass run on every release (via `ui-review`), no open
+- Advanced rendered pass run on every release (via `uxui-audit`), no open
   severity-3+ usability/state findings.
 - axe-core / pa11y in CI for the un-seeable a11y (focus, keyboard, ARIA).
 - i18n: zero hardcoded user-facing strings; one language per surface.
@@ -135,5 +135,5 @@ rendered pass as **deferred** in the report (don't silently skip it).
   finding lands in one dimension, not both).
 - D16 — UI & design-system craft (visual layer; shares the advanced
   rendered hand-off — see D16's note).
-- `ui-review` skill — owns the rendered pixel/UX review; this dimension
+- `uxui-audit` skill — owns the rendered pixel/UX review; this dimension
   delegates the advanced pass to it.

@@ -87,7 +87,7 @@ every cut that touches them. **default-deep** run deep when the
 product has the matching surface. **ui-deep** run deep when a UI
 surface is detected (frontend markers per `routing/detect-stack.md`);
 each has a base source-level pass and an advanced rendered pass that
-delegates to the `ui-review` skill. **scan** dims go deep only when a
+delegates to the `uxui-audit` skill. **scan** dims go deep only when a
 🔴 surfaces. **release-only** runs when a tag is being cut.
 
 ## Severity and status
