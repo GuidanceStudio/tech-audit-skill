@@ -15,12 +15,7 @@ Calibrated for a 1–3 engineer shop at PoC → BETA with paying customers. SOC2
 | **Quarterly** (half-day) | `cuts/full.md` + restore-from-backup drill + dep major-version sweep + sub-processor list refresh | Every 3 months | 5-7 h |
 | **Triggered** (out-of-cycle) | Targeted dims | New channel/integration; new tenant tier; post-incident; secret-store change | Variable |
 
-Treatment per tier follows the registry tags in `SKILL.md`:
-**always-deep** runs at every release-tag pass (those dims decay
-invisibly between audits); **default-deep** runs at every release-tag
-pass when the product has the matching surface; **scan** runs
-quarterly or when an incident promotes it; **release-only** runs only
-when a tag is being cut.
+Treatment per tier follows the registry tags in `SKILL.md` § Dimension registry.
 
 ---
 

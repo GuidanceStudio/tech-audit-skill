@@ -787,3 +787,191 @@ many real findings need attention.
 **Done when:** a D01 pass on a repo with `.code-audit/debt.tsv`
 suppresses findings covered by active debt, reactivates expired debt
 as 🔴, and reports the suppressed count; CI verifies the contract.
+
+---
+
+## Follow-up — Cross-skill coherence fixes (2026-06-20)
+
+Issues found during coherence audit across forge-flow, uxui-audit, and
+tech-audit. Fixes belong here.
+
+### M20: Unify severity scale across tech-audit and uxui-audit — adopt 0–4 everywhere ✅
+
+**Why:** The three skills (forge-flow, tech-audit, uxui-audit) are one family.
+Today tech-audit uses 🔴🟡🟢 (3-level emoji) while uxui-audit uses Nielsen
+0–4 (5-level numeric). D15/D16 say to fold uxui-audit findings into findings.tsv
+but no mapping exists. Rather than add a mapping that must be remembered and
+applied manually, unify on the more granular 0–4 scale across both audit skills.
+Emoji stay as visual shorthand: 4🔴 / 3🟡 / 0-2🟢.
+
+**Approach:**
+- `tech-audit/SKILL.md`: replace the 3-level emoji-only severity section with
+  the unified 0–4 scale + emoji mapping table.
+- `tech-audit/templates/finding-phrasing.md`: update severity references from
+  pure emoji to numeric+emoji format; update per-dimension severity references.
+- `tech-audit/dimensions/D15` and `D16`: remove the mapping ambiguity — the
+  advanced pass now passes through uxui-audit findings directly since both
+  skills share the same 0–4 scale.
+- `uxui-audit/uxui-audit/dimensions.md`: add emoji column to severity table
+  so the same 0–4+emoji convention is visible in the UX/UI audit catalog.
+- `uxui-audit/uxui-audit/SKILL.md`: add emoji shorthand in the severity section.
+- All dimension files keep using emoji as inline shorthand (🟡, 🔴) since
+  they're concise and the numeric mapping is now documented once in SKILL.md.
+
+**Tasks:**
+- [x] Replace severity section in `tech-audit/SKILL.md` with unified 0–4 + emoji table
+- [x] Update `tech-audit/templates/finding-phrasing.md` severity axis description + calibrations
+- [x] Simplify D15/D16 advanced pass: uxui-audit findings now fold directly (same scale)
+- [x] Add emoji column to `uxui-audit/uxui-audit/dimensions.md` severity table
+- [x] Add emoji shorthand to `uxui-audit/uxui-audit/SKILL.md` severity section
+- [x] Grep both skills for stale 3-tier references and update
+- [x] crossref linter green; pytest green
+- [x] Commit & push
+
+**Done when:** Both audit skills document the same 0–4 severity scale with
+emoji shorthand; D15/D16 fold uxui-audit findings without manual mapping.
+
+### M21: Align audit directories — `.code-audit/` vs `.tech-audit/`
+
+**Why:** `forge-flow` writes intentional debt to `.code-audit/debt.tsv`
+(M23), but tech-audit uses `.tech-audit/work/` and `.tech-audit/accepted.tsv`
+for its own findings. M19 already teaches D01 to cross-reference
+`.code-audit/debt.tsv` — but that path was written assuming the forge-flow
+directory. If the target repo has both a forge-flow-generated
+`.code-audit/debt.tsv` and a tech-audit `.tech-audit/` tree, there are
+two audit-adjacent directories with different prefixes. This is confusing
+and fragile.
+
+**Approach:** Assess whether to:
+- (A) unify on one prefix (e.g. `.code-audit/` for everything), or
+- (B) keep both but document the relationship clearly in both skills.
+
+Option A is cleaner but requires updating forge-flow M23 and tech-audit
+work paths; option B is lower-cost. Decide in the M21 implementation.
+At minimum, add a cross-reference in both skills' README and SKILL.md
+so nobody is surprised by the other directory.
+
+**Tasks:**
+- [ ] Decide on unification (A) or documentation (B)
+- [ ] Update affected paths in tech-audit (findings.tsv, accepted.tsv, work dirs)
+- [ ] Update forge-flow M23 if path changes
+- [ ] Add cross-reference in README.md and SKILL.md of both skills
+- [ ] crossref linter green; full pytest suite green
+- [ ] Commit & push
+
+**Done when:** The relationship between `.code-audit/` and `.tech-audit/`
+is documented (or they are unified), and neither skill is surprised by
+the other's artifacts.
+
+---
+
+## v0.4 — Token essentiality pass
+
+Cross-skill audit found ~9% of the skill payload is recoverable through
+compression and deduplication. Same concepts, same behavior, fewer tokens.
+
+Recommended order: M22 → M23 → M24 → M25 → M26.
+
+### M22: Compress finding-phrasing.md — tone vignettes, severity-vs-confidence, Bad→Good table
+
+**Why:** Three tone vignettes (Alarmist/Patronizing/Smug) take 32 lines with
+full "bad" quote + explanation + "better" quote. Severity-vs-confidence takes
+11 lines for what could be 3. Bad→Good table duplicates the "Words to avoid"
+bullet list. "Never quote a secret" is 6 lines for a 1-line rule.
+
+**Approach:**
+- Tone rules: 1 line each ("No exclamation marks", "No hedging", "No judgment words")
+- Severity-vs-confidence: compress to 3 lines
+- Bad→Good table: remove (keep bullet list)
+- "Never quote a secret": 1 line
+- Compress specific calibrations to bullet list
+- Phrasing template: compress from 13 lines to 5
+
+**Tasks:**
+- [ ] Compress tone vignettes (lines 5-36) to 4 lines
+- [ ] Compress severity-vs-confidence (lines 73-86) to 3 lines
+- [ ] Remove Bad→Good table (lines 148-155)
+- [ ] Compress "Never quote a secret" (lines 88-93) to 1 line
+- [ ] Compress calibrations (lines 100-124) to bullet list
+- [ ] Compress phrasing template (lines 39-51) to 5 lines
+- [ ] Commit & push
+
+**Done when:** `finding-phrasing.md` is ~70 lines (from ~163).
+
+### M23: Compress SKILL.md — Topics column, meta-commentary, stack detection, pipeline
+
+**Why:** Registry Topics column restates dimension titles. "13-dimension
+framing in older prose is historical" is a changelog entry. Stack detection
+paragraph has implementation details that belong in routing/. Findings
+pipeline prose is verbose.
+
+**Approach:**
+- Drop Topics column from dimension registry table
+- Delete historical meta-commentary (line 82)
+- Compress stack detection paragraph to 1 line
+- Compress severity table (remove Label column)
+- Compress findings pipeline + repeat-audit memory sections
+
+**Tasks:**
+- [ ] Drop Topics column from registry
+- [ ] Delete historical meta-commentary line
+- [ ] Compress stack detection paragraph
+- [ ] Compress severity table
+- [ ] Compress findings pipeline prose
+- [ ] Commit & push
+
+**Done when:** SKILL.md is ~140 lines (from ~172).
+
+### M24: Compress D01 — shell code blocks, redundant commentary
+
+**Why:** D01 has ~40 lines of multi-line shell snippets (dead-tree scan:
+5-line loop, directory hygiene: 6-line loop). The LLM doesn't need code
+expanded — a one-liner or script reference suffices.
+
+**Approach:** Compress multi-line shell blocks to one-liners where possible.
+Move complex pipelines to `scripts/` and reference them. Remove redundant
+commentary that restates the dimension's purpose.
+
+**Tasks:**
+- [ ] Compress dead-tree scan from 6 lines to 1
+- [ ] Compress directory hygiene from 6 lines to 1
+- [ ] Remove redundant commentary
+- [ ] Commit & push
+
+**Done when:** D01 shell code is compact; same methods, fewer tokens.
+
+### M25: Deduplicate cuts + operations — remove dimension-treatment restatements
+
+**Why:** `full.md` and `operations.md` restate dimension-treatment semantics
+(`always-deep`, `scan`, etc.) already defined in SKILL.md registry. `full.md`
+also restates the findings pipeline (incremental TSV, resume, refutation)
+from SKILL.md.
+
+**Approach:**
+- `full.md`: replace dimension-treatment prose with reference to SKILL.md registry
+- `full.md`: replace findings pipeline prose with reference to SKILL.md § Findings pipeline
+- `full.md`: compress fan-out subagent section from 42 lines to 6
+- `operations.md`: replace treatment prose with registry reference
+
+**Tasks:**
+- [ ] Compress full.md dimension-treatment section
+- [ ] Compress full.md findings pipeline reference
+- [ ] Compress full.md fan-out section
+- [ ] Compress operations.md treatment section
+- [ ] Commit & push
+
+**Done when:** Dimension treatment defined once in SKILL.md; cuts and operations reference it.
+
+### M26: Trim READMEs
+
+**Why:** README contains redundant install instructions and dimension descriptions
+that duplicate SKILL.md.
+
+**Approach:** Compress install section, remove dimension detail table, point to
+SKILL.md for the full registry.
+
+**Tasks:**
+- [ ] Compress top-level `README.md`
+- [ ] Commit & push
+
+**Done when:** README conveys same information with fewer words.

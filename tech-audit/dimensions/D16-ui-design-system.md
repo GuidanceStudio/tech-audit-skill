@@ -109,9 +109,10 @@ app is runnable with Node + Playwright, use the **shared rendered
 hand-off** (see D15): invoke the `uxui-audit` skill (or its
 `scripts/capture.mjs`) once, and apply its **Visual design** and
 **Responsive** dimensions to the screenshots — that skill owns capture
-and the pixel rubric. Fold findings back tagged `D16`. Run the capture
-ONCE and split findings between D15 (usability/state) and D16
-(visual/responsive); don't screenshot twice.
+and the pixel rubric. Fold findings back tagged `D16`. Both skills
+share the unified 0–4 severity scale; findings fold directly, no
+mapping needed. Run the capture ONCE and split findings between D15
+(usability/state) and D16 (visual/responsive); don't screenshot twice.
 
 Without a runnable app or Playwright, stay source-level and record the
 rendered pass as **deferred**.

@@ -108,9 +108,9 @@ Node + Playwright are available:
   `scripts/capture.mjs`) to screenshot the real surfaces, then apply its
   Usability (Nielsen), State-coverage, and Responsive dimensions. That
   skill owns rendered capture + the pixel-level rubric — invoke it
-  rather than duplicating it.
-- Fold the rendered findings back into this audit's `findings.tsv`
-  tagged `D15`, cross-referencing the `uxui-audit` report.
+  rather than duplicating it. Both skills share the same 0–4 severity
+  scale; findings fold directly into this audit's `findings.tsv` tagged
+  `D15`, cross-referencing the `uxui-audit` report.
 
 Without a runnable app or Playwright, stay source-level and record the
 rendered pass as **deferred** in the report (don't silently skip it).

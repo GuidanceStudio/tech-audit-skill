@@ -38,37 +38,23 @@ forge-flow hand-off.
 
 ## Install
 
-The installer is multi-assistant. Run it with no target for an
-interactive menu, or pass `--target`:
-
 ```sh
 git clone git@github.com:GuidanceStudio/tech-audit-skill.git
 cd tech-audit-skill
-./install.sh                      # interactive menu
 ./install.sh --target claude      # ~/.claude/skills/tech-audit/
-./install.sh --target codex        # ~/.codex/skills/tech-audit/
-./install.sh --target opencode     # ~/.config/opencode/skills/tech-audit/
-./install.sh --target gemini        # ~/.gemini/commands/tech-audit.toml (+ payload)
-./install.sh --target agents        # AGENTS.md pointer for Cursor/Windsurf/Copilot/Aider/Continue
-./install.sh --target all           # claude + codex + opencode
-./install.sh --target manual        # print the folder path; copy it yourself
+./install.sh --target codex       # ~/.codex/skills/tech-audit/
+./install.sh --target opencode    # ~/.config/opencode/skills/tech-audit/
+./install.sh --target gemini      # ~/.gemini/commands/tech-audit.toml
+./install.sh --target agents      # AGENTS.md pointer for Cursor/Windsurf/...
+./install.sh --target all         # claude + codex + opencode
 ```
 
-Remote one-liner (no clone needed):
-
+Remote one-liner:
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/tech-audit-skill/main/install.sh) --target claude
 ```
 
-`claude`, `codex`, and `opencode` get the `tech-audit/` folder copied
-verbatim — it's the shared [agentskills.io](https://agentskills.io)
-`SKILL.md` standard, so one payload serves all three. `gemini` gets a
-generated TOML command (Gemini doesn't use SKILL.md); `agents` writes an
-[`AGENTS.md`](https://agents.md) pointer for the broad tier. Flags:
-`--force` (overwrite), `--check` (report drift vs source, per `--target`),
-`--agents-dir DIR` (where the `agents` pointer is written). Or skip the
-installer entirely — `tech-audit/` is self-contained, copy it anywhere
-your tool reads skills.
+Flags: `--force` (overwrite), `--check` (report drift), `--agents-dir DIR`. Or skip the installer — `tech-audit/` is self-contained, copy it anywhere your tool reads skills.
 
 ## Use
 
@@ -98,75 +84,28 @@ The skill picks the right **cut** based on your phrasing, or asks if it's ambigu
 
 ### Example sessions
 
-**Quick PR review**:
-
-```
-You: /tech-audit on https://github.com/our-org/our-repo/pull/143
-
-Claude: [scans the diff, picks dims based on what was touched, emits a
-quick-scan output with severity-tagged findings + ship/hold verdict]
-```
-
-**Security pass on a service**:
-
-```
-You: security review on the gateway/ folder
-
-Claude: [runs D4, D5, D7-security-subset; loads matching threat-models;
-emits a security-pass output with top risk + ranked findings + tool output
-summary + ship/hold recommendation]
-```
-
-**Full audit, quarterly**:
-
-```
-You: full audit of this repo, write the report
-
-Claude: [walks all 13 dimensions per cuts/full.md; writes
-docs/internal/tech-audit-2026-06-15.md with executive summary, status
-overview, per-dim findings, and proposed follow-up milestones]
-```
+- **Quick PR:** `/tech-audit on ...pull/143` → scans the diff, emits severity-tagged findings + ship/hold verdict.
+- **Security pass:** `security review on gateway/` → runs D4, D5, D7; outputs top risk + ranked findings + recommendation.
+- **Full audit:** `full audit, write the report` → walks all dimensions, writes `docs/internal/tech-audit-YYYY-MM-DD.md` with executive summary, findings, and milestones.
 
 ## The 13 dimensions
 
-| # | Title | Tag |
+The full D1–D16 registry with title + treatment tag lives in `tech-audit/SKILL.md` § Dimension registry — the single source of truth. D1, D2, D3, D13, D14 are always-deep (decay invisibly); D4, D5, D8 are default-deep (high blast radius for B2B SaaS); D15, D16 are ui-deep; the rest scan or release-only.
+
+## Cadence
+
+| Tier | When | Effort |
 |---|---|---|
-| D1 | Code essentiality | always-deep |
-| D2 | Docs integrity | always-deep |
-| D3 | Tests as adversaries | always-deep |
-| D4 | Security posture | ⚠️ default-deep |
-| D5 | Multi-tenant isolation | ⚠️ default-deep |
-| D6 | Operational readiness | scan |
-| D7 | Dependency hygiene | scan |
-| D8 | Build / CI / dev-loop | ⚠️ default-deep |
-| D9 | Data model integrity | scan |
-| D10 | Performance & cost baseline | release-only deep |
-| D11 | Legal / compliance | scan |
-| D12 | Admin surface consistency | scan |
-| D13 | Setup replicability | always-deep |
+| Per-push CI | Every PR + push | 0 min (automated) |
+| Per-release-tag | Before `v0.x.y` | ~30 min |
+| Quarterly | Every 3 months | ~5-7 h |
+| Triggered | New integration, post-incident, pre-VC | Variable |
 
-D1, D2, D3, D13 are **always-deep** — they decay invisibly between audits. Nobody notices code rot, doc drift, test homogeneity, or replicability regression until someone tries to clone fresh and the build fails for reasons that weren't in the README.
+See [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) for full cadence + starter pack + anti-patterns.
 
-D4, D5, D8 carry the ⚠️ default-deep mark because they're the high-blast-radius dimensions for B2B SaaS — auth, multi-tenant, CI.
+## Severity
 
-## Cadence (what to run when)
-
-| Tier | Cuts | When |
-|---|---|---|
-| Per-push CI | (automated tools only) | Every PR + push to main |
-| Per-release-tag | `release` cut | Before tagging `v0.x.y` (~30 min human) |
-| Quarterly | `full` cut + restore-from-backup drill | Every 3 months (~5-7 h) |
-| Triggered | `deep`, `security` cuts | New integration; post-incident; pre-VC |
-
-See [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) for the full cadence + 5-week starter pack + anti-patterns to avoid + things-that-bite-if-skipped.
-
-## Severity scheme
-
-| Mark | Meaning | Example |
-|---|---|---|
-| 🔴 | **Ship-blocker** — fix before next audit pass | Secret in git history; cross-tenant data leak; SQLi in admin panel |
-| 🟡 | **Fix soon** — defensible to leave; real auditor will note | Healthcheck missing; dep 6mo behind; doc claim mismatches code |
-| 🟢 | **Nice-to-have** — acceptable, document, move on | TODO in dev tooling; non-pinned base image tag |
+🔴 = ship-blocker, 🟡 = fix soon, 🟢 = nice-to-have. Full 0-4 scheme in `SKILL.md` § Severity and status.
 
 ## Per-project extensions
 
@@ -208,23 +147,16 @@ Each file has one clear purpose. Files cross-reference rather than duplicate —
 
 ## Design principles
 
-1. **Lazy load** — the spine (`SKILL.md`) is ~250 lines; sub-files are loaded only when their cut / dimension / language matches. A `quick` cut on a TypeScript PR loads ~5-7 files, not all 40+.
-2. **Generalist core, stack-aware extensions** — dimensions are stack-agnostic; `languages/` carry stack-specific gotchas.
-3. **Provenance tracked** — each concept notes its source (Anthropic skill, OWASP, internal framework). Future updates traceable.
-4. **No bloat** — every file earns its place. Files >300 lines are split. The skill eats its own dogfood on D1.
-5. **Severity discipline** — 🔴 / 🟡 / 🟢 calibrated to "what would a real auditor say at a VC pitch?". No alarmism, no padding.
-6. **Output template-driven** — every cut has a matching template. Reports are consistent across audits + comparable over time.
+1. **Lazy load** — `SKILL.md` is ~250 lines; sub-files loaded only when their cut/dimension/language matches.
+2. **Generalist core, stack-aware extensions** — dimensions stack-agnostic; `languages/` carry gotchas.
+3. **Provenance tracked** — each concept notes its source. Future updates traceable.
+4. **No bloat** — every file earns its place. Files >300 lines split. Dogfoods D1.
+5. **Severity discipline** — 🔴/🟡/🟢 calibrated to "what would a real auditor say?". No alarmism, no padding.
+6. **Output template-driven** — every cut has a matching template. Reports consistent + comparable.
 
 ## Anti-patterns this skill explicitly rejects
 
-- **SOC2 readiness program at PoC stage.** Wait for first enterprise prospect.
-- **PR review with 2+ approvers for 1-3 engineers.** Strong CI is the reviewer.
-- **100% line-coverage targets.** Branch coverage on tenancy + billing only.
-- **External pen-test before product-market fit.** €5-15k for findings CI would catch.
-- **Snyk / SonarCloud paid tier.** Trivy + Semgrep + native deps audits cover ~90% for €0.
-- **STRIDE threat-model documents per feature.** Nobody reads them. A 5-line release-time "what changed in trust boundaries?" note works.
-
-See [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) § Anti-patterns for the full list.
+SOC2 readiness at PoC stage, PR review with 2+ approvers for 1-3 engineers, 100% line-coverage targets, external pen-test before product-market fit, Snyk/SonarCloud paid tier, STRIDE threat-model docs per feature. Full list: [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) § Anti-patterns.
 
 ## Contributing
 

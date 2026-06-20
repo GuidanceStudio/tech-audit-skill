@@ -73,10 +73,7 @@ For every class / module that *should* have callers:
 
 ```sh
 # PHP
-for cls in $(grep -rh "^class " app/ | awk '{print $2}'); do
-  refs=$(grep -rlw "$cls" . --include="*.php" | grep -v "/$(echo $cls | tr A-Z a-z).php" | wc -l)
-  [ "$refs" = "0" ] && echo "DEAD: $cls"
-done
+grep -rh "^class " app/ | awk '{print $2}' | while read cls; do grep -rlw "$cls" . --include="*.php" | grep -qv "/$(echo $cls | tr A-Z a-z).php" || echo "DEAD: $cls"; done
 
 # Python
 ruff check --select F401,F841 .   # unused imports + unused vars
@@ -120,12 +117,7 @@ Duplicated block >50 contiguous tokens → 🟡. >200 tokens or repeated >3× �
 ### Directory hygiene
 
 ```sh
-# Dirs with ≤1 file
-find . -type d -not -path '*/node_modules/*' -not -path '*/.git/*' \
-  | while read d; do
-      n=$(find "$d" -maxdepth 1 -type f | wc -l)
-      [ "$n" -le 1 ] && echo "$n  $d"
-    done | sort
+find . -type d -not -path '*/node_modules/*' -not -path '*/.git/*' | while read d; do n=$(find "$d" -maxdepth 1 -type f | wc -l); [ "$n" -le 1 ] && echo "$n  $d"; done | sort
 ```
 
 Twin "Concerns" / "Helpers" / "Utils" dirs that could merge → 🟡.
