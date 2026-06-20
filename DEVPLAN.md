@@ -699,10 +699,10 @@ only inline and docstring comments that restate the implementation.
 ```
 
 **Tasks:**
-- [ ] Add the Comment-weight scan method to `code-audit/dimensions/D01-code-essentiality.md`
-- [ ] Extend `tests/test_essentiality_contract.py` to assert the comment-weight method exists in D01
-- [ ] Run the full pytest suite; crossref linter green
-- [ ] Commit & push
+- [x] Add the Comment-weight scan method to `code-audit/dimensions/D01-code-essentiality.md`
+- [x] Extend `tests/test_essentiality_contract.py` to assert the comment-weight method exists in D01
+- [x] Run the full pytest suite; crossref linter green
+- [x] Commit & push
 
 **Done when:** a D01 pass on a codebase with verbose comments emits
 `shrink:` findings for comments that restate the code, and CI verifies
@@ -738,10 +738,10 @@ unit, and upgrade path. Then:
 ```
 
 **Tasks:**
-- [ ] Add the ponytail: scan method to `code-audit/dimensions/D01-code-essentiality.md`
-- [ ] Extend `tests/test_essentiality_contract.py` to assert the scan method exists and documents ceiling-gating
-- [ ] Full pytest suite + crossref linter green
-- [ ] Commit & push
+- [x] Add the ponytail: scan method to `code-audit/dimensions/D01-code-essentiality.md`
+- [x] Extend `tests/test_essentiality_contract.py` to assert the scan method exists and documents ceiling-gating
+- [x] Full pytest suite + crossref linter green
+- [x] Commit & push
 
 **Done when:** a D01 pass finds ponytail: comments and either suppresses
 related findings (ceiling not reached) or promotes them to 🔴 (ceiling
@@ -778,11 +778,11 @@ reviewer see how much intentional debt is currently active versus how
 many real findings need attention.
 
 **Tasks:**
-- [ ] Add the Debt-register cross-reference step to `code-audit/dimensions/D01-code-essentiality.md`
-- [ ] Extend `tests/test_essentiality_contract.py` to assert the cross-reference step exists and handles both active and expired debt
-- [ ] Full pytest suite + crossref linter green
-- [ ] Install + `--check` OK
-- [ ] Commit & push
+- [x] Add the Debt-register cross-reference step to `code-audit/dimensions/D01-code-essentiality.md`
+- [x] Extend `tests/test_essentiality_contract.py` to assert the cross-reference step exists and handles both active and expired debt
+- [x] Full pytest suite + crossref linter green
+- [x] Install + `--check` OK
+- [x] Commit & push
 
 **Done when:** a D01 pass on a repo with `.code-audit/debt.tsv`
 suppresses findings covered by active debt, reactivates expired debt
