@@ -25,6 +25,8 @@ dim␟location␟title-slug⇥severity⇥reason⇥date⇥revisit-by
 - **revisit-by** is optional; past that date the finding resurfaces
   automatically (use it for "accept until the next release").
 
+- **Source change** resurfaces the row: when the location's file has commits since the row's date (`git log --since=<date> -- <path>`), the finding is re-checked against the new code and the row is renewed or removed.
+
 A cut reports `suppressed: N accepted findings` so the suppression is
 visible, never silent. This is the audit-level analogue of the
 tool-config suppressions below.

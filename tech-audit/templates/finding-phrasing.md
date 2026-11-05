@@ -31,6 +31,14 @@ Example:
 
 ---
 
+## Security findings (D4, D5)
+
+A security finding states the lower-trust principal, the input it controls, the control it bypasses, the affected resource and the observed or owner-observable result. A deviation from a checklist with no such path is hardening: it goes to the separate Hardening list, without a severity above 🟢.
+
+A finding that depends on a control outside the repository (proxy, provider setting, response header, ACL, identity policy) assumes neither its presence nor its absence. It is `needs-verification` and names the missing fact and a check the owner can run.
+
+---
+
 ## Severity vs confidence
 Severity (0-4) = how bad if true. Confidence (certain/probable/needs-verification) = how sure. Independent axes. A 4 tagged needs-verification is still a 4: triage can usually verify against the source, so discounting severity for uncertainty would only hide impact. Never inflate confidence. Optional 7th TSV column.
 

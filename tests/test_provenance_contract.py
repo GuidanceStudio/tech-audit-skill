@@ -76,3 +76,46 @@ def test_fanout_specifies_agent_brief_and_single_dispatch() -> None:
     assert "TSV schema" in fanout
     assert "inventory" in fanout
     assert "modify nothing" in fanout
+
+
+def _read(rel: str) -> str:
+    return (SKILL / rel).read_text()
+
+
+def test_router_gates_execution_of_target_code() -> None:
+    section = _section(ROUTER.read_text(), "## Running the target's code")
+    for needle in ("owns or trusts", "confined", "needs-verification", "third-party"):
+        assert needle in section
+    assert "Running the target's code" in _read("dimensions/D13-setup-replicability.md")
+
+
+def test_every_output_template_carries_not_examined() -> None:
+    assert "## Coverage statement" in ROUTER.read_text()
+    for rel in (
+        "templates/security-pass-output.md",
+        "templates/full-audit-report.md",
+        "templates/triage-and-summary.md",
+        "templates/quick-scan-output.md",
+    ):
+        assert "Not examined" in _read(rel), rel
+    assert "partial" in _section(ROUTER.read_text(), "## Coverage statement")
+
+
+def test_security_findings_need_boundary_and_flag_external_controls() -> None:
+    section = _section(PHRASING.read_text(), "## Security findings (D4, D5)")
+    for needle in ("lower-trust principal", "Hardening", "outside the repository", "needs-verification"):
+        assert needle in section
+    assert "### Hardening" in _read("templates/security-pass-output.md")
+
+
+def test_red_findings_are_refuted_by_a_fresh_agent() -> None:
+    pipeline = _section(ROUTER.read_text(), "## Findings pipeline")
+    line = next(ln for ln in pipeline.splitlines() if "Refute every" in ln)
+    assert "fresh agent" in line
+    assert "did not write" in line
+
+
+def test_accepted_baseline_resurfaces_when_source_changes() -> None:
+    assert "git log --since" in _read("playbooks/false-positives.md")
+    line = next(ln for ln in ROUTER.read_text().splitlines() if "Accepted-findings baseline" in ln)
+    assert "changed since" in line

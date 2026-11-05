@@ -6,7 +6,12 @@ attempts the documented bootstrap command, and reports how many steps the
 operator had to do BEYOND `.env` editing + the bootstrap command.
 
 Usage:
-    python3 _doctor_fresh_clone.py REPO_URL [--bootstrap-cmd "./cli.sh stack-up"] [--scratch /tmp/audit-fresh]
+    python3 _doctor_fresh_clone.py REPO_URL [--run-bootstrap] [--bootstrap-cmd "./cli.sh stack-up"] [--scratch /tmp/audit-fresh]
+
+The bootstrap command is the repo's own code. It runs only with --run-bootstrap,
+for a repo you own or inside a confined environment (SKILL.md "Running the
+target's code"). Without the flag the walkthrough stops before step 4 and
+exits 2: D13 is not verified.
 
 A D13 'pass' requires:
   - .env.example exists.
@@ -66,6 +71,8 @@ def main() -> None:
     ap.add_argument("repo_url", help="git URL of the repo to test")
     ap.add_argument("--bootstrap-cmd", default="./cli.sh stack-up",
                     help="bootstrap command to run after .env edit (default: ./cli.sh stack-up)")
+    ap.add_argument("--run-bootstrap", action="store_true",
+                    help="execute the repo's bootstrap command (own or confined repos only)")
     ap.add_argument("--scratch", default=None,
                     help="scratch directory (default: /tmp/<random>)")
     args = ap.parse_args()
@@ -107,6 +114,9 @@ def main() -> None:
         findings_yellow.append(f"manual step in operator docs: {f}")
 
     # Step 4: attempt the bootstrap command
+    if not args.run_bootstrap:
+        print(f"\n[4/4] bootstrap {args.bootstrap_cmd!r} NOT run (pass --run-bootstrap)")
+        print_results(findings_red, findings_yellow, bootstrap_run=False)
     print(f"\n[4/4] running bootstrap: {args.bootstrap_cmd!r}")
     try:
         cmd = args.bootstrap_cmd.split()
@@ -123,11 +133,14 @@ def main() -> None:
     print_results(findings_red, findings_yellow)
 
 
-def print_results(red: list[str], yellow: list[str]) -> None:
+def print_results(red: list[str], yellow: list[str], bootstrap_run: bool = True) -> None:
     print("\n" + "=" * 60)
     print("D13 fresh-clone walkthrough — results")
     print("=" * 60)
     if not red and not yellow:
+        if not bootstrap_run:
+            print("D13 not verified: the bootstrap was not run.")
+            sys.exit(2)
         print("✅ pass — no findings")
         sys.exit(0)
     if red:
@@ -138,7 +151,12 @@ def print_results(red: list[str], yellow: list[str]) -> None:
         print(f"\n🟡 {len(yellow)} fix-soon finding(s):")
         for f in yellow:
             print(f"   - {f}")
-    sys.exit(1 if red else 0)
+    if red:
+        sys.exit(1)
+    if not bootstrap_run:
+        print("\nD13 not verified: the bootstrap was not run.")
+        sys.exit(2)
+    sys.exit(0)
 
 
 if __name__ == "__main__":

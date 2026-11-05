@@ -39,6 +39,10 @@ For each:
 |---|---|---|---|
 | 🔴 D5-1 | <name> | <file> | <hours/days> |
 | 🟡 D1-3 | <name> | <file> | <hours> |
+
+## Not examined
+
+<dimensions not run, sampled areas, tools unavailable or not run, cut limits>
 ```
 
 ---
@@ -99,6 +103,10 @@ For `cuts/release.md` (cadence pass before tagging a release).
 |---|---|---|---|
 | p95 latency | 250ms | 260ms | +4% (within budget) |
 | Cost per 1K requests | €0.012 | €0.013 | +8% (within budget) |
+
+## Not examined
+
+<dimensions not run, sampled areas, tools unavailable or not run, cut limits>
 ```
 
 ## Triage milestone phrasing

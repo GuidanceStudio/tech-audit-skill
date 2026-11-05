@@ -110,6 +110,12 @@ an appendix if the operator wants them.)
 
 ---
 
+## Not examined
+
+<dimensions not run, sampled areas, tools unavailable or not run, cut limits>
+
+---
+
 ## Appendix — 🟢 findings (optional)
 
 (Long tail of 🟢 findings, browsable but not headlining the report.)

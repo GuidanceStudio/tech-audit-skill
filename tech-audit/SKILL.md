@@ -103,14 +103,14 @@ Long audits outlive a single context window. Persist as you go, verify before em
 
 - **Incremental TSV.** Write to `.tech-audit/work/<YYYY-MM-DD>/findings.tsv`: schema `severity⇥dim⇥location⇥title⇥fix⇥effort⇥confidence` (6 or 7 columns). Append at the close of each dimension — survives compaction, resumable. Assemble the final report from this file, not memory. `quick`/`security` stay inline.
 - **Resume.** If today's `findings.tsv` exists, read it, skip dimensions already represented, continue.
-- **Refute every 🔴.** Re-read the actual code path and prove it wrong: is auth handled upstream? is the path dead? is validation done elsewhere? Refuted → drop/downgrade. Can't verify without runtime → mark `confidence: needs-verification`. Mandatory for 🔴 — single biggest false-positive reducer.
+- **Refute every 🔴.** Re-read the actual code path and prove it wrong: is auth handled upstream? is the path dead? is validation done elsewhere? Refuted → drop/downgrade. Can't verify without runtime → mark `confidence: needs-verification`. Mandatory for 🔴 — single biggest false-positive reducer. In deep, full, release and security cuts a fresh agent that did not write the finding does it, when sub-agents exist; brief: "You did not write this finding; try to refute it." It receives the finding and the repo, never other verifiers' conclusions, and its verdict replaces the original wording. Without sub-agents the auditor refutes inline.
 - **🟡 requires the cited code path read.** A grep/pattern match alone caps confidence at `needs-verification`.
 - **Debt filter (every dimension).** Load `.tech-audit/debt.tsv` once per run and filter EVERY dimension's findings per the Debt-register cross-reference contract in `dimensions/D01-code-essentiality.md` (single source): an active row suppresses the finding into the suppressed counter; an expired `revisit_by` promotes it to 🔴.
 - **Milestone prefix.** Match the target devplan's ID scheme: `scripts/_findings_to_milestones.py --prefix M --start <next>`. Don't default to `AUDIT`.
 
 ### Repeat-audit memory
 
-- **Accepted-findings baseline** — `.tech-audit/accepted.tsv`: one row per dismissed finding, key = `dim␟location␟title-slug`, plus severity, reason, date, optional `revisit-by`. Every cut filters against it; past `revisit-by` entries resurface. Dismissal flow: `playbooks/false-positives.md`.
+- **Accepted-findings baseline** — `.tech-audit/accepted.tsv`: one row per dismissed finding, key = `dim␟location␟title-slug`, plus severity, reason, date, optional `revisit-by`. Every cut filters against it; past `revisit-by` entries resurface, and so do rows whose location file changed since the row's date (`git log --since=<date> -- <path>`), for a re-check. Dismissal flow: `playbooks/false-positives.md`.
 - **Mechanical deltas** — diff current `findings.tsv` against most recent prior: new / fixed / still-open per severity. Trend section from that diff, not from re-reading old prose.
 - **Debt register** — `.tech-audit/debt.tsv` (may be populated by the forge-flow skill's simplify pass): applied to every dimension by the pipeline debt filter above; contract in `dimensions/D01-code-essentiality.md`.
 
@@ -123,6 +123,14 @@ Long audits outlive a single context window. Persist as you go, verify before em
 - Keep intermediate notes terse (structured rows, not prose); prose
   belongs in the final report only.
 - Cite `file:line`; paste code only when the hunk itself is the finding.
+
+## Running the target's code
+
+Reading source and running scanners (gitleaks, semgrep, trivy, linters) is the default. Executing the target's own code (its build, tests, install scripts, bootstrap, the D13 fresh-clone walkthrough) runs whatever the repo says, and a dependency install fetches and runs more. Do it only when the user owns or trusts the repo, or inside a confined environment: no network beyond what the step needs, a scratch `HOME`, an allowlisted environment with no credentials, a read-only checkout. For a third-party repo (diligence, acquisition) without that confinement, do not execute: the dependent finding is `needs-verification` naming the check not run, and the report gives the command for the owner.
+
+## Coverage statement
+
+Every report ends with `Not examined`: dimensions not run, areas sampled rather than read in full, tools unavailable or not run, and what the cut excludes by design. `quick` and any run narrowed to a path or diff say they are partial. A clean result covers what was examined and says nothing about the rest.
 
 ## Workspace / multi-repo mode
 

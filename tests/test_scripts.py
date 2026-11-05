@@ -121,3 +121,23 @@ def test_stub_shape_matches_devplan_executor() -> None:
         assert old not in stubs
     # Grouped-yellows stub shares the same shape.
     assert "## AUDIT-D2-followup: D2 🟡 cleanup" in stubs
+
+
+def test_fresh_clone_walkthrough_does_not_run_bootstrap_without_flag(tmp_path: Path) -> None:
+    repo = tmp_path / "target"
+    repo.mkdir()
+    marker = tmp_path / "ran"
+    (repo / ".env.example").write_text("K=\n")
+    (repo / "boot.sh").write_text(f"#!/bin/sh\ntouch {marker}\n")
+    (repo / "boot.sh").chmod(0o755)
+    for cmd in (["init", "-q"], ["add", "."], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "x"]):
+        subprocess.run(["git", "-C", str(repo), *cmd], check=True)
+    script = Path(__file__).resolve().parent.parent / "tech-audit" / "scripts" / "_doctor_fresh_clone.py"
+    proc = subprocess.run(
+        [sys.executable, str(script), f"file://{repo}", "--bootstrap-cmd", "./boot.sh",
+         "--scratch", str(tmp_path / "scratch")],
+        capture_output=True, text=True,
+    )
+    assert proc.returncode == 2, proc.stdout + proc.stderr
+    assert not marker.exists()
+    assert "not verified" in proc.stdout

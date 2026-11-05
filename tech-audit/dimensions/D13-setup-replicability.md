@@ -10,6 +10,8 @@ A product whose fresh-clone bootstrap requires inventiveness fails this dimensio
 
 ### The fresh-clone walkthrough (the test that matters)
 
+The walkthrough executes the repo's own bootstrap. Apply `SKILL.md` § Running the target's code first: on a third-party repo without a confined environment, do not run it and report D13 as not verified.
+
 Wipe the dev directory. Fresh `git clone` of every required repo. Copy `.env.example` → `.env`. Fill ONLY the operator-visible external secrets (LLM API key, OAuth client IDs, bot tokens). Run the documented bootstrap sequence (`./cli.sh stack-up`, `make up`, `docker compose up -d`, whatever).
 
 ```sh

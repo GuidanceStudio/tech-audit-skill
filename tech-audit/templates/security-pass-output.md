@@ -46,6 +46,10 @@ For each:
 
 - Bullet list, terse. Trivia, style, "could be tighter".
 
+### Hardening
+
+- Checklist deviations with no trust-boundary path (see `templates/finding-phrasing.md` § Security findings). One line each, no severity above 🟢.
+
 ---
 
 ## Threat-model coverage
@@ -69,6 +73,12 @@ For each:
 | trivy fs | 2 HIGH, 5 MODERATE | CVE-2024-XXXX in xyz |
 | semgrep | 3 | <top> |
 | stack-SAST | 0 | — |
+
+---
+
+## Not examined
+
+<dimensions not run, sampled areas, tools unavailable or not run, controls outside the repo that were not checked>
 
 ---
 

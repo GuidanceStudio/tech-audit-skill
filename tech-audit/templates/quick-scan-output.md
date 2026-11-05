@@ -22,6 +22,8 @@ Inline reply for `cuts/quick.md`. Goes back to the user in the chat — no file 
 | 🟡 | `path.php:118-125` | <one-line> | <one-line> |
 | 🟢 | `path.py:7` | <one-line> | <one-line> |
 
+**Not examined**: <files, dimensions and tools outside this partial scan>
+
 ### Recommendation
 
 **Ship** / **Hold** — <one sentence>.

@@ -402,3 +402,24 @@ file.
 **Done when:** `DEVPLAN.md` contains M1-M9, `Out of scope for v0.3`, and this milestone; `DEVPLAN-ARCHIVE.md` contains 21 verified lines; the ID-set diff is empty; pytest is green.
 
 **Execution notes:** 21/21 milestones archived (0 without a findable commit). ID-set diff before/after: empty (M31 is the only new ID).
+
+---
+
+## M32: Adopt six method rules from Cloudflare's published security-audit skill ✅
+
+**Why:** A comparison with `cloudflare/security-audit-skill` (2026-11-05) found six rules that tech-audit lacks and that bear on what a reader may conclude from a report: it runs the audited repo's own code with no confinement rule (D13's `_doctor_fresh_clone.py` runs an arbitrary bootstrap command), reports never say what was not examined, security findings need not name a trust boundary, controls that live outside the repo are guessed rather than flagged, 🔴 refutation is done by the context that found the finding, and an accepted-finding row keeps suppressing after the cited code changes. The ledger, fingerprint, schema-validator and agent-budget machinery of that skill is out of scope: it serves multi-hour audits and would make every cut heavier.
+
+**Approach:** Each rule is written once in its single source (`SKILL.md` for pipeline rules, `templates/finding-phrasing.md` for finding shape) and referenced from cuts and templates. Rule 1 is enforced in the script that runs target code, not only in prose.
+
+**Tasks:**
+- [x] Rule 1, running the target's code: `SKILL.md` section stating scanners and source reads are the default, and executing the repo's build, tests, install or bootstrap needs an owned repo or a confined environment; otherwise the finding is `needs-verification` with the check not run. `_doctor_fresh_clone.py` runs the bootstrap only with `--run-bootstrap`; without it the walkthrough reports D13 as not verified (exit 2). `dimensions/D13-setup-replicability.md` references the rule.
+- [x] Rule 2, coverage statement: `SKILL.md` rule that every report ends with a `Not examined` section (dimensions not run, sampled areas, tools unavailable or not run, cut limits); `quick` and narrowed runs say they are partial. Added to the four output templates.
+- [x] Rule 3, boundary gate: `finding-phrasing.md` section for D4/D5 findings (lower-trust principal, input, control bypassed, affected resource, observed result); a deviation without one goes to a separate Hardening list. `security-pass-output.md` gets the Hardening section.
+- [x] Rule 4, controls outside the repo: `finding-phrasing.md` rule that a finding depending on proxy, provider, header or ACL settings absent from the repo is `needs-verification` naming the missing fact and an owner-run check.
+- [x] Rule 5, independent refutation: `SKILL.md` pipeline line requires a fresh agent, briefed to refute, for every 🔴 in deep, full, release and security cuts when sub-agents exist; inline self-refutation otherwise.
+- [x] Rule 6, baseline decay: `playbooks/false-positives.md` and the `SKILL.md` repeat-audit line state that a change to the row's file since its date resurfaces the finding for re-check.
+- [x] Contract tests in `tests/test_provenance_contract.py` pin rules 1-6; a script test pins the `--run-bootstrap` gate. `README.md` file tree unchanged.
+- [x] Run `python3 -m pytest tests/ -q`, then `./install.sh --force`.
+- [x] Commit with the devplan ticks in the same commit, push, report `<sha> → origin/<branch>` and where `main` stands.
+
+**Done when:** pytest is green; each of the six rules is findable in exactly one source file and referenced elsewhere; running `_doctor_fresh_clone.py` on a repo without `--run-bootstrap` executes none of its commands and exits 2.
