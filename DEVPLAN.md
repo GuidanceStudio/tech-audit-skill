@@ -423,3 +423,20 @@ file.
 - [x] Commit with the devplan ticks in the same commit, push, report `<sha> → origin/<branch>` and where `main` stands.
 
 **Done when:** pytest is green; each of the six rules is findable in exactly one source file and referenced elsewhere; running `_doctor_fresh_clone.py` on a repo without `--run-bootstrap` executes none of its commands and exits 2.
+
+---
+
+## M33: The README states the real dimension count, order and licence ✅
+
+**Why:** The README says "13-dimension" in three places and titles a section "The 13 dimensions"; the registry holds sixteen (D1-D16). It calls the skill "Code-audit", points to "install.sh (next section)" when the install section is above, says `SKILL.md` is "~250 lines" (it is 151), and lists the licence as Apache-2.0 in the file tree while `LICENSE` and the closing section say MIT. The maintainer-facing layout section sits between usage sections.
+
+**Approach:** Correct each statement against its source (`SKILL.md` registry, `LICENSE`, line count). Add the Cloudflare skill to the sources list and the untrusted-code limit to "What this skill does NOT do". Move "Repository layout" and its prose after "Cadence"; re-indent the tree. The dimension list stays only in `SKILL.md`.
+
+**Tasks:**
+- [x] Replace "13" with 16 / drop the number; rename the dimensions section; fix name, install link, line count, licence
+- [x] Add the Cloudflare source and the untrusted-code limit
+- [x] Reorder sections; fix tree indentation
+- [x] `python3 -m pytest tests/ -q` green, `./install.sh --force`
+- [x] Commit with the ticks, push
+
+**Done when:** every number in the README matches its source, pytest is green, and the layout section follows the usage sections.
