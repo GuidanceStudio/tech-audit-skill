@@ -41,23 +41,32 @@ populated by the forge-flow skill's simplify pass; both skills share that file.
 
 ## Install
 
-```sh
-git clone git@github.com:GuidanceStudio/tech-audit-skill.git
-cd tech-audit-skill
-./install.sh --target claude      # ~/.claude/skills/tech-audit/
-./install.sh --target codex       # ~/.codex/skills/tech-audit/
-./install.sh --target opencode    # ~/.config/opencode/skills/tech-audit/
-./install.sh --target gemini      # ~/.gemini/commands/tech-audit.toml
-./install.sh --target agents      # AGENTS.md pointer for Cursor/Windsurf/...
-./install.sh --target all         # claude + codex + opencode
+`tech-audit/` is the whole skill: one flat folder that follows the common `SKILL.md`
+layout. Put a copy where your assistant reads skills.
+
+```bash
+git clone <repository-url> tech-audit-skill
+cp -r tech-audit-skill/tech-audit ~/.claude/skills/tech-audit            # Claude Code
+cp -r tech-audit-skill/tech-audit ~/.gemini/skills/tech-audit            # Gemini CLI
+cp -r tech-audit-skill/tech-audit ~/.config/opencode/skills/tech-audit   # opencode
 ```
 
-Remote one-liner:
-```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/GuidanceStudio/tech-audit-skill/main/install.sh) --target claude
+For Codex, copy the folder to `~/.agents/skills/tech-audit`, or use its skill installer
+pinned to a tag or a commit instead of `main`, because a moving branch changes the
+instructions the assistant follows:
+
+```
+$skill-installer install <owner>/<repository>/tree/<tag-or-commit>/tech-audit
 ```
 
-Flags: `--force` (overwrite), `--check` (report drift), `--agents-dir DIR`. Or skip the installer — `tech-audit/` is self-contained, copy it anywhere your tool reads skills.
+Keep one active copy per assistant.
+
+**Update.** Save any local edits, then replace the whole installed folder with the new
+one. `diff -r tech-audit-skill/tech-audit <installed folder>` shows whether a copy has
+drifted from the source.
+
+**Not provided.** There is no installer script, no remote one-liner and no `AGENTS.md`
+or Gemini command wrapper; earlier versions had them.
 
 ## Use
 
@@ -110,7 +119,6 @@ See [`tech-audit/playbooks/operations.md`](tech-audit/playbooks/operations.md) f
 
 ```
 tech-audit-skill/
-├── install.sh                       # multi-assistant installer
 ├── README.md                        # this file
 ├── LICENSE                          # MIT
 ├── docs/examples/                   # worked example reports (not shipped)
@@ -136,7 +144,7 @@ tech-audit-skill/
 ```
 
 `tech-audit/` is the whole skill — copy it anywhere your assistant
-reads skills, or use `install.sh` (see [Install](#install)).
+reads skills (see [Install](#install)).
 
 Each file has one clear purpose. Files cross-reference rather than duplicate — updating a fact happens in one place. The skill itself follows the rules it audits (D1 + D2).
 

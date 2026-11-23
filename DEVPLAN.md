@@ -9,9 +9,9 @@ tracked `__pycache__`), pipeline gaps (no fan-out, no finding
 verification, no checkpointing), content gaps (correctness dimension,
 AI-runtime threat model).
 
-After any milestone that touches `claude/code-review/`, redeploy with
-`./install.sh --force` (the installed copy at `~/.claude/skills/` is a
-copy, not a symlink).
+After any milestone that touches the payload, replace the installed folder
+with a fresh copy of `tech-audit/` (the installed copy is a copy, not a
+symlink; see the README Install section).
 
 Recommended execution order (minimises re-touching the same files):
 M1 → M2 → M9 (tests pin the fixes + guard the rename) → M7 (slim/dedup
@@ -440,3 +440,20 @@ file.
 - [x] Commit with the ticks, push
 
 **Done when:** every number in the README matches its source, pytest is green, and the layout section follows the usage sections.
+
+---
+
+## M34: The repo distributes the skill as a plain folder ✅
+
+**Why:** `install.sh` only copied the payload to per-assistant directories, with `--check`, `--force` and wrapper targets on top. The payload is a flat `SKILL.md` folder that Claude Code, Codex, Gemini CLI and opencode all read, so a copy command does the same job and the script is one more file to keep correct.
+
+**Approach:** Delete the installer and its test, rewrite the README Install section as copy commands per assistant with an update procedure, and drop the installer from the file tree and the devplan preamble. Closed milestones keep their wording.
+
+**Tasks:**
+- [x] `git rm install.sh tests/test_install.py`
+- [x] README Install section: copy commands, Codex skill installer pinned to a tag or commit, update procedure, note that the installer and wrappers are gone
+- [x] Remove `install.sh` from the README file tree and the payload note; fix the devplan preamble
+- [x] `python3 -m pytest tests/ -q` green; CI has no installer step to remove
+- [x] Commit with the ticks, push
+
+**Done when:** no live file references `install.sh` or `--target`, and pytest is green.
